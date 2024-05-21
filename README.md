@@ -11,3 +11,6 @@ The first step is to prepare environment and communication with Ollama.
 3. Run `mvn install` from the repository
 4. Run `BackendApplication`
 5. Open http://localhost:8080/model/ollama in the browser. You should be able to see a list of installed models.
+
+## API Documentation available
+http://localhost:8080/swagger-ui/index.html
