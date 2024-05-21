@@ -15,7 +15,7 @@ public class ModelController {
         this.webClient = webClient;
     }
 
-    @GetMapping("/ollama")
+    @GetMapping(value = "/ollama", produces = "application/json")
     public Mono<String> listModels() {
         return webClient.get().uri("http://localhost:11434/api/tags")
                 .retrieve()
