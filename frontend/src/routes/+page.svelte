@@ -1,7 +1,10 @@
 <script>
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
+
   let models = [];
   let selectedModel = "";
+  let question = "";
+  let responseMessage = "";
 
   onMount(async () => {
     try {
@@ -9,17 +12,51 @@
       if (!response.ok) {
         throw new Error('Failed to fetch models');
       }
-      models = (await response.json()).models;
+      const data = await response.json();
+      models = data.models; // Access the models array within the response
     } catch (error) {
       console.error('Error fetching models:', error);
     }
   });
 
   function handleModelChange(event) {
-    selectedModel = event.target.value;
+    const target = event.target;
+    selectedModel = target.value;
     console.log('Selected model:', selectedModel);
   }
+
+  async function sendQuestion() {
+    if (!selectedModel) {
+      responseMessage = "Please select a model first.";
+      return;
+    }
+    if (!question) {
+      responseMessage = "Please enter a question.";
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/completion/generate/ollama`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({prompt: question, model: selectedModel.split(":")[0]})
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send question');
+      }
+
+      const data = await response.json();
+      responseMessage = data.response || 'No response from model.';
+    } catch (error) {
+      console.error('Error sending question:', error);
+      responseMessage = 'Failed to send question.';
+    }
+  }
 </script>
+
 <label for="model-dropdown">Choose a model:</label>
 <select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
     <option value="" disabled>Select a model</option>
@@ -27,5 +64,10 @@
         <option value={model.model}>{model.name}</option>
     {/each}
 </select>
+<hr>
+<label for="question-input">Enter your question:</label>
+<input id="question-input" type="text" bind:value={question}/>
 
-<p>Selected Model ID: {selectedModel}</p>
+<button on:click={sendQuestion}>Send Question</button>
+
+<p>Response: {responseMessage}</p>
