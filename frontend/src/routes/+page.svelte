@@ -41,7 +41,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({prompt: question, model: selectedModel.split(":")[0]})
+        body: JSON.stringify({prompt: question, model: selectedModel})
       });
 
       if (!response.ok) {
@@ -71,3 +71,34 @@
 <button on:click={sendQuestion}>Send Question</button>
 
 <p>Response: {responseMessage}</p>
+
+<style>
+    label {
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    select, input {
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    p {
+      margin-top: 1rem;
+    }
+
+</style>
