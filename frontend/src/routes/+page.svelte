@@ -6,6 +6,7 @@
     let question = "";
     let responseMessage = "";
     let isLoading = false;  // New state to track loading status
+    let isError = false;
 
     onMount(async () => {
         try {
@@ -43,6 +44,7 @@
 
         responseMessage = ""; // Clear previous messages
         isLoading = true; // Start loading indicator
+        isError = false; // Reset error state
 
         try {
             const response = await fetch(`/api/completion/generate/ollama`, {
@@ -50,7 +52,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({prompt: question, model: selectedModel})
+                body: JSON.stringify({ prompt: question, model: selectedModel })
             });
 
             if (!response.ok) {
@@ -62,8 +64,9 @@
         } catch (error) {
             console.error('Error sending question:', error);
             responseMessage = 'Failed to send question.';
+            isError = true; // Set error state
         } finally {
-            isLoading = false; // End loading
+            isLoading = false;
         }
     }
 </script>
@@ -87,18 +90,10 @@
     {/if}
 </button>
 
-<p>Response: {responseMessage}</p>
+<p class:error={isError}>Response: {responseMessage}</p>
 
 
 <style>
-    :root {
-        --primary-color: #4A90E2;
-        --text-color: #333;
-        --background-color: #f5f5f5;
-        --button-bg-color: #4A90E2;
-        --button-text-color: #fff;
-        --error-color: #D32F2F;
-    }
 
     label {
         display: block;
@@ -138,9 +133,16 @@
         border-left: 5px solid var(--primary-color);
     }
 
+    button:disabled {
+        background-color: #aaa; /* Grayed out */
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
     p.error {
-        color: var(--error-color);
-        border-color: var(--error-color);
+        background-color: var(--error-color);
+        color: #fff;
+        border-color: #f00; /* Make it stand out more */
     }
 
     @keyframes rotate {
