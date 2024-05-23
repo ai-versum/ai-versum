@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { marked } from 'marked';
 
     let models = [];
     let selectedModel = "";
@@ -90,7 +91,7 @@
     {/if}
 </button>
 
-<p class:error={isError}>Response: {responseMessage}</p>
+<p class:error={isError}>{@html marked(responseMessage)}</p>
 
 
 <style>
