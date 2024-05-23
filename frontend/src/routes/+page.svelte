@@ -1,60 +1,70 @@
 <script>
-  import {onMount} from 'svelte';
+    import { onMount } from 'svelte';
 
-  let models = [];
-  let selectedModel = "";
-  let question = "";
-  let responseMessage = "";
+    let models = [];
+    let selectedModel = "";
+    let question = "";
+    let responseMessage = "";
+    let isLoading = false;  // New state to track loading status
 
-  onMount(async () => {
-    try {
-      const response = await fetch('/api/model/ollama');
-      if (!response.ok) {
-        throw new Error('Failed to fetch models');
-      }
-      const data = await response.json();
-      models = data.models; // Access the models array within the response
-    } catch (error) {
-      console.error('Error fetching models:', error);
-    }
-  });
+    onMount(async () => {
+        try {
+            const response = await fetch('/api/model/ollama');
+            if (!response.ok) {
+                throw new Error('Failed to fetch models');
+            }
+            const data = await response.json();
+            models = data.models;
+        } catch (error) {
+            console.error('Error fetching models:', error);
+        }
+    });
 
-  function handleModelChange(event) {
-    const target = event.target;
-    selectedModel = target.value;
-    console.log('Selected model:', selectedModel);
-  }
-
-  async function sendQuestion() {
-    if (!selectedModel) {
-      responseMessage = "Please select a model first.";
-      return;
-    }
-    if (!question) {
-      responseMessage = "Please enter a question.";
-      return;
+    function handleModelChange(event) {
+        selectedModel = event.target.value;
     }
 
-    try {
-      const response = await fetch(`/api/completion/generate/ollama`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({prompt: question, model: selectedModel})
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send question');
-      }
-
-      const data = await response.json();
-      responseMessage = data.response || 'No response from model.';
-    } catch (error) {
-      console.error('Error sending question:', error);
-      responseMessage = 'Failed to send question.';
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendQuestion();
+        }
     }
-  }
+
+    async function sendQuestion() {
+        if (!selectedModel) {
+            responseMessage = "Please select a model first.";
+            return;
+        }
+        if (!question) {
+            responseMessage = "Please enter a question.";
+            return;
+        }
+
+        responseMessage = ""; // Clear previous message
+        isLoading = true; // Start loading
+
+        try {
+            const response = await fetch(`/api/completion/generate/ollama`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({prompt: question, model: selectedModel})
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send question');
+            }
+
+            const data = await response.json();
+            responseMessage = data.response || 'No response from model.';
+        } catch (error) {
+            console.error('Error sending question:', error);
+            responseMessage = 'Failed to send question.';
+        } finally {
+            isLoading = false; // End loading
+        }
+    }
 </script>
 
 <label for="model-dropdown">Choose a model:</label>
@@ -66,11 +76,16 @@
 </select>
 <hr>
 <label for="question-input">Enter your question:</label>
-<input id="question-input" type="text" bind:value={question}/>
+<input id="question-input" type="text" bind:value={question} on:keydown={handleKeyPress} autocomplete="off"/>
 
 <button on:click={sendQuestion}>Send Question</button>
 
+{#if isLoading}
+    <div class="loader"></div>
+{/if}
+
 <p>Response: {responseMessage}</p>
+
 
 <style>
     :root {
@@ -131,5 +146,23 @@
     p.error {
         color: var(--error-color);
         border-color: var(--error-color);
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader {
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: rotate 2s linear infinite;
     }
 </style>
