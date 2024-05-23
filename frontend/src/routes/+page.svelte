@@ -73,32 +73,63 @@
 <p>Response: {responseMessage}</p>
 
 <style>
-    label {
-      margin-bottom: 0.5rem;
-      display: block;
+    :root {
+        --primary-color: #4A90E2;
+        --text-color: #333;
+        --background-color: #f5f5f5;
+        --button-bg-color: #4A90E2;
+        --button-text-color: #fff;
+        --error-color: #D32F2F;
     }
 
-    select, input {
-      margin-bottom: 1rem;
-      width: 100%;
-      padding: 0.5rem;
-      font-size: 1rem;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        margin: 0;
+        padding: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    select, input[type="text"] {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
 
     button {
-      padding: 0.5rem 1rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+        border: none;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
     button:hover {
-      background-color: #0056b3;
+        background-color: darken(var(--button-bg-color), 10%);
     }
 
     p {
-      margin-top: 1rem;
+        color: var(--text-color);
+        background-color: #e9e9e9;
+        padding: 10px;
+        border-radius: 4px;
+        border-left: 5px solid var(--primary-color);
     }
 
+    p.error {
+        color: var(--error-color);
+        border-color: var(--error-color);
+    }
 </style>
