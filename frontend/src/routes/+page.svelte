@@ -31,6 +31,7 @@
     }
 
     async function sendQuestion() {
+        if (isLoading) return;  // Prevent sending if already loading
         if (!selectedModel) {
             responseMessage = "Please select a model first.";
             return;
@@ -40,8 +41,8 @@
             return;
         }
 
-        responseMessage = ""; // Clear previous message
-        isLoading = true; // Start loading
+        responseMessage = ""; // Clear previous messages
+        isLoading = true; // Start loading indicator
 
         try {
             const response = await fetch(`/api/completion/generate/ollama`, {
@@ -78,11 +79,13 @@
 <label for="question-input">Enter your question:</label>
 <input id="question-input" type="text" bind:value={question} on:keydown={handleKeyPress} autocomplete="off"/>
 
-<button on:click={sendQuestion}>Send Question</button>
-
-{#if isLoading}
-    <div class="loader"></div>
-{/if}
+<button on:click={sendQuestion} disabled={isLoading}>
+    {#if isLoading}
+        <div class="loader"></div>
+    {:else}
+        Send Question
+    {/if}
+</button>
 
 <p>Response: {responseMessage}</p>
 
@@ -95,14 +98,6 @@
         --button-bg-color: #4A90E2;
         --button-text-color: #fff;
         --error-color: #D32F2F;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--text-color);
-        background-color: var(--background-color);
-        margin: 0;
-        padding: 20px;
     }
 
     label {
