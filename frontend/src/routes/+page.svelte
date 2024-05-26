@@ -50,7 +50,7 @@
 <MessageInput
 	on:errorMessage={(e) => { responseMessage = e.detail; isError = true; }}
 	on:message={(e) => { responseMessage = e.detail; isError = false; }}
-	selectedModel="{selectedModel}" />
+	selectedModel="{models.find(it => it.id === selectedModel)}"/>
 
 <style>
 

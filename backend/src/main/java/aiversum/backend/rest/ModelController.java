@@ -1,6 +1,6 @@
 package aiversum.backend.rest;
 
-import org.springframework.beans.factory.annotation.Value;
+import aiversum.backend.config.properties.PropertiesConfig;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,40 +12,30 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/models")
 public class ModelController {
     private final WebClient webClient;
+    private final PropertiesConfig propertiesConfig;
 
-    @Value("${ai.versum.ollama.baseUrl}")
-    private String ollamaBaseUrl;
-
-    @Value("${ai.versum.ollama.enabled}")
-    private boolean ollamaEnabled;
-
-    @Value("${ai.versum.openai.enabled}")
-    private boolean openaiEnabled;
-
-    @Value("${ai.versum.openai.apiKey}")
-    private String openaiApiKey;
-
-    public ModelController(WebClient webClient) {
+    public ModelController(WebClient webClient, PropertiesConfig propertiesConfig) {
         this.webClient = webClient;
+        this.propertiesConfig = propertiesConfig;
     }
 
     @GetMapping(value = "/ollama", produces = "application/json")
     public Mono<String> listOllamaModels() {
-        if (!ollamaEnabled) {
+        if (!propertiesConfig.ollama().enabled()) {
             return Mono.empty();
         }
-        return webClient.get().uri(STR."\{ollamaBaseUrl}/api/tags")
+        return webClient.get().uri(STR."\{propertiesConfig.ollama().baseUrl()}/api/tags")
                 .retrieve()
                 .bodyToMono(String.class);
     }
 
     @GetMapping(value = "/openai", produces = "application/json")
     public Mono<String> listOpenAIModels() {
-        if (!openaiEnabled) {
+        if (!propertiesConfig.openai().enabled()) {
             return Mono.empty();
         }
         return webClient.get().uri("https://api.openai.com/v1/models")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
                 .retrieve()
                 .bodyToMono(String.class);
     }

@@ -1,7 +1,10 @@
 package aiversum.backend.rest;
 
+import aiversum.backend.config.properties.PropertiesConfig;
 import aiversum.backend.rest.dto.CompletionCommand;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,23 +17,43 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/completion")
 public class CompletionController {
     private final WebClient webClient;
+    private final PropertiesConfig propertiesConfig;
 
     @Value("${ai.versum.ollama.baseUrl}")
     private String ollamaBaseUrl;
 
-    public CompletionController(WebClient webClient) {
+    public CompletionController(WebClient webClient, PropertiesConfig propertiesConfig) {
         this.webClient = webClient;
+        this.propertiesConfig = propertiesConfig;
     }
 
     @PostMapping(value = "/generate/{provider}", produces = "application/json")
     public Mono<String> generate(@PathVariable String provider, @RequestBody CompletionCommand completionCommand) {
-        if (provider.equals("ollama")) {
-            return webClient.post().uri(STR."\{ollamaBaseUrl}/api/generate")
+        return switch (provider) {
+            case "ollama" -> webClient.post().uri(STR."\{ollamaBaseUrl}/api/generate")
                     .body(Mono.just(completionCommand), CompletionCommand.class)
                     .retrieve()
                     .bodyToMono(String.class);
-        } else {
-            throw new IllegalArgumentException("Unknown provider: " + provider);
-        }
+            case "openai" -> {
+                String body = STR."""
+                        {
+                            "model": "\{completionCommand.model()}",
+                                "messages": [
+                                  {
+                                    "role": "user",
+                                    "content": "\{completionCommand.prompt()}"
+                                  }
+                                ]
+                        }
+                        """;
+                yield webClient.post().uri("https://api.openai.com/v1/chat/completions")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Mono.just(body), String.class)
+                        .retrieve()
+                        .bodyToMono(String.class);
+            }
+            case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
+        };
     }
 }

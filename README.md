@@ -5,6 +5,14 @@ The repository will bontain both frontend and backend.
 
 The first step is to prepare environment and communication with Ollama.
 
+## Features
+
+* 🤖 OpenAI text completions
+* 🤖 Ollama text completions
+* 🤖 OpenAI model list
+* 🤖 Ollama model list
+* 💻 Code Syntax Highlighting: Enjoy enhanced code readability with our syntax highlighting feature.
+
 ## Local setup
 ### Requirements
 1. Install ollama with their guide: https://github.com/ollama/ollama and download any model

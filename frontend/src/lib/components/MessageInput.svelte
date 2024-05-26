@@ -1,10 +1,12 @@
 <script>
-	export let selectedModel = '';
+	import { fetchOllamaCompletion } from '$lib/api/ollamaAPI.js';
+	import { createEventDispatcher } from 'svelte';
+	import { fetchOpenAICompletion } from '$lib/api/openaiAPI.js';
+
+	export let selectedModel = { provider: '', id: '' };
 
 	let question = '';
 	let isLoading = false;  // New state to track loading status
-
-	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -27,30 +29,16 @@
 
 		isLoading = true; // Start loading indicator
 
-		try {
-			const response = await fetch(`/api/completion/generate/ollama`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ prompt: question, model: selectedModel })
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to send question');
-			}
-
-			const data = await response.json();
-			if (data.response) {
-				dispatch('message', data.response);
-			} else {
-				dispatch('errorMessage', 'No response from model.');
-			}
-		} catch (error) {
-			console.error('Error sending question:', error);
-			dispatch('errorMessage', 'Failed to send question.');
-		} finally {
-			isLoading = false;
+		if (selectedModel.provider === 'ollama') {
+			fetchOllamaCompletion(question, selectedModel.id)
+				.then(response => dispatch('message', response))
+				.catch((error) => dispatch('errorMessage', error))
+				.finally(() => isLoading = false);
+		} else if (selectedModel.provider === 'openai') {
+			fetchOpenAICompletion(question, selectedModel.id)
+				.then(response => dispatch('message', response))
+				.catch((error) => dispatch('errorMessage', error))
+				.finally(() => isLoading = false);
 		}
 	}
 </script>
@@ -75,6 +63,7 @@
         border: 1px solid #ccc;
         border-radius: 4px;
     }
+
     button {
         background-color: var(--button-bg-color);
         color: var(--button-text-color);
