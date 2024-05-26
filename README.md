@@ -13,6 +13,9 @@ The first step is to prepare environment and communication with Ollama.
 * 🤖 Ollama model list
 * 💻 Code Syntax Highlighting: Enjoy enhanced code readability with our syntax highlighting feature.
 
+## Documentation
+Is built with GitHub pages and available [here](https://ai-versum.github.io/ai-versum/).
+
 ## Local setup
 ### Requirements
 1. Install ollama with their guide: https://github.com/ollama/ollama and download any model
