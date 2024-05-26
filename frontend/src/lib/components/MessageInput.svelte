@@ -8,7 +8,6 @@
 
 	const dispatch = createEventDispatcher();
 
-
 	function handleKeyPress(event) {
 		if (event.key === 'Enter') {
 			sendQuestion();

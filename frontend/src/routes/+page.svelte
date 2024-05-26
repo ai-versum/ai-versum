@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { marked } from 'marked';
 	import MessageInput from '$lib/components/MessageInput.svelte';
+	import { fetchOllamaModels } from '$lib/api/ollamaAPI.js';
+	import { fetchOpenAIModels } from '$lib/api/openaiAPI.js';
 
 	let models = [];
 	let selectedModel = '';
@@ -9,30 +11,36 @@
 	let isError = false;
 
 	onMount(async () => {
-		try {
-			const response = await fetch('/api/model/ollama');
-			if (!response.ok) {
-				throw new Error('Failed to fetch models');
-			}
-			const data = await response.json();
-			models = data.models;
-		} catch (error) {
-			console.error('Error fetching models:', error);
-		}
+		Promise.all([
+			fetchOpenAIModels(),
+			fetchOllamaModels()
+		]).then(([openaiModels, ollamaModels]) => {
+			const parsedOpenAIModels = openaiModels.map(model => ({
+				id: model.id,
+				name: model.id,
+				model: model.id,
+				provider: "openai"
+			}));
+			const parsedOllamaModels = ollamaModels.map(model => ({
+				id: model.name,
+				name: model.name,
+				model: model.id,
+				provider: "ollama"
+			}));
+			models = parsedOpenAIModels.concat(parsedOllamaModels);
+		});
 	});
 
 	function handleModelChange(event) {
 		selectedModel = event.target.value;
 	}
-
-
 </script>
 
 <label for="model-dropdown">Choose a model:</label>
 <select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
 	<option value="" disabled>Select a model</option>
 	{#each models as model}
-		<option value={model.model}>{model.name}</option>
+		<option value={model.id}>{model.name}</option>
 	{/each}
 </select>
 <hr>

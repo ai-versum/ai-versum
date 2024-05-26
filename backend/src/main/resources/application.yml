@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: backend
+
+ai.versum:
+  ollama:
+    enabled: true
+    baseUrl: http://localhost:11434
+  openai:
+    enabled: true
+    apiKey: sk_test_1234567890

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static java.lang.StringTemplate.STR;
-
 @RestController
 @RequestMapping("/completion")
 public class CompletionController {
