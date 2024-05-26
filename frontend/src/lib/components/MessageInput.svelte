@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { fetchOpenAICompletion } from '$lib/api/openaiAPI.js';
 
-	export let selectedModel = { provider: '', id: '' };
+	export let selectedModel;
 
 	let question = '';
 	let isLoading = false;  // New state to track loading status
