@@ -8,6 +8,7 @@ export const fetchOllamaModels = async () => {
 		return data.models;
 	} catch (error) {
 		console.error('Error fetching models:', error);
+		return [];
 	}
 };
 
@@ -53,14 +54,22 @@ export const fetchOllamaChat = async (chatStore, model, onDataReceived) => {
 
 		const reader = response.body.getReader();
 		const decoder = new TextDecoder('utf-8');
+		let buffer = '';
 
 		while (true) {
 			const { done, value } = await reader.read();
 			if (done) {
 				break;
 			}
-			const chunk = decoder.decode(value, { stream: true });
-			onDataReceived(JSON.parse(chunk).message.content);
+			buffer += decoder.decode(value, { stream: true });
+
+			let boundary;
+			while ((boundary = buffer.indexOf('}{')) !== -1) {
+				const chunk = buffer.slice(0, boundary + 1);
+				buffer = buffer.slice(boundary + 1);
+				console.debug('Chunk:', chunk);
+				onDataReceived(JSON.parse(chunk).message.content);
+			}
 		}
 	} catch (error) {
 		console.error('Error sending question:', error);
