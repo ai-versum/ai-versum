@@ -18,7 +18,7 @@ API Documentation available after app is up and running: http://localhost:8080/s
 
 ## Local setup
 ### Requirements
-1. Install ollama with their guide: https://github.com/ollama/ollama and download any model
+1. You need either Ollama or OpenAI API setup to play with the application. See more in [docs](https://ai-versum.github.io/ai-versum/#configuration).
 2. Java 21
 3. Node 20
 
