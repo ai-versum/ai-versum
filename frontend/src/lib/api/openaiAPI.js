@@ -8,6 +8,7 @@ export const fetchOpenAIModels = async () => {
 		return data.data;
 	} catch (error) {
 		console.error('Error fetching models:', error);
+		return [];
 	}
 }
 

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Removed
 ### Fixed
+- Fixed a bug where empty model list broke the app
+- Fixed a bug where multiple streaming chunks of the response broke the chat display
 ### Deprecated
 ### Security
 

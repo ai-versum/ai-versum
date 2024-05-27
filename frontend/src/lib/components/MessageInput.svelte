@@ -22,6 +22,7 @@
 
 	function handleKeyPress(event) {
 		if (event.key === 'Enter') {
+			event.preventDefault();
 			sendQuestion();
 		}
 	}
@@ -62,64 +63,27 @@
 	}
 </script>
 
-<label for="question-input">Enter your question:</label>
-<input id="question-input" type="text" bind:value={question} on:keydown={handleKeyPress} autocomplete="off" />
+<div class="flex relative w-full rounded-3xl px-1.5 border border-gray-200 bg-white
+dark:border-gray-850 dark:bg-gray-900 dark:text-gray-100">
+	<textarea
+		id="chat-textarea"
+		class=" dark:bg-gray-900 dark:text-gray-100 outline-none w-full py-3 px-3 pl-4'} rounded-xl resize-none h-[48px]"
+		placeholder={'Send a message'}
+		bind:value={question}
+		on:keydown={handleKeyPress}
+	/>
 
-<button on:click={sendQuestion} disabled={isLoading}>
-	{#if isLoading}
-		<div class="loader"></div>
-	{:else}
-		Send Question
-	{/if}
-</button>
-
-<style>
-    input[type="text"] {
-        width: 100%;
-        padding: 8px 10px;
-        margin-bottom: 20px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    button {
-        background-color: var(--button-bg-color);
-        color: var(--button-text-color);
-        border: none;
-        padding: 10px 20px;
-        text-transform: uppercase;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button:hover {
-        background-color: var(--button-bg-color-darker)
-    }
-
-    button:disabled {
-        background-color: #aaa; /* Grayed out */
-        cursor: not-allowed;
-        opacity: 0.6;
-    }
-
-    .loader {
-        border: 4px solid #f3f3f3; /* Light grey */
-        border-top: 4px solid #3498db; /* Blue */
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: rotate 2s linear infinite;
-    }
-
-    @keyframes rotate {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-</style>
+	<div class="self-end mb-2 flex space-x-1 mr-1">
+			<button
+				class="{question !== ''
+										? 'bg-black hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100 '
+										: 'disabled bg-gray-100 dark:text-gray-900 dark:bg-gray-800 '} text-white transition rounded-full p-1.5 self-center"
+				type="submit"
+				disabled={question === ''}
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+				</svg>
+			</button>
+	</div>
+</div>
