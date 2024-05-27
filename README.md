@@ -16,6 +16,8 @@ The first step is to prepare environment and communication with Ollama.
 ## Documentation
 Is built with GitHub pages and available [here](https://ai-versum.github.io/ai-versum/).
 
+API Documentation available after app is up and running: http://localhost:8080/swagger-ui/index.html
+
 ## Local setup
 ### Requirements
 1. Install ollama with their guide: https://github.com/ollama/ollama and download any model
@@ -31,6 +33,3 @@ Is built with GitHub pages and available [here](https://ai-versum.github.io/ai-v
 1. Run `npm install` from the frontend directory
 2. Run `npm start` from the frontend directory
 3. Open http://localhost:5173 in the browser. You should be able to see the model selection.
-
-## API Documentation available
-http://localhost:8080/swagger-ui/index.html
