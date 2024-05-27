@@ -18,7 +18,7 @@ export const fetchOllamaCompletion = async (question, model) => {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ prompt: question, model })
+			body: JSON.stringify({ prompt: question, model, stream: true })
 		});
 
 		if (!response.ok) {
@@ -37,25 +37,30 @@ export const fetchOllamaCompletion = async (question, model) => {
 	}
 };
 
-export const fetchOllamaChat = async (chatStore, model) => {
+export const fetchOllamaChat = async (chatStore, model, onDataReceived) => {
 	try {
 		const response = await fetch(`/api/chat/ollama`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ messages: [...chatStore], model , stream: false})
+			body: JSON.stringify({ messages: [...chatStore], model, stream: true})
 		});
 
 		if (!response.ok) {
 			throw new Error('Failed to send question');
 		}
 
-		const data = await response.json();
-		if (data.message) {
-			return data.message.content;
-		} else {
-			throw new Error('No response from model.');
+		const reader = response.body.getReader();
+		const decoder = new TextDecoder('utf-8');
+
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) {
+				break;
+			}
+			const chunk = decoder.decode(value, { stream: true });
+			onDataReceived(JSON.parse(chunk).message.content);
 		}
 	} catch (error) {
 		console.error('Error sending question:', error);

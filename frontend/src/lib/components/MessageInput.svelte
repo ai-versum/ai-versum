@@ -13,7 +13,11 @@
 	};
 
 	const addNewModelMessage = (content, isError = false) => {
-		$chatStore = [...$chatStore, { role: 'assistant', content, isError }];
+		if ($chatStore.length > 0 && $chatStore[$chatStore.length - 1].role === 'assistant') {
+			$chatStore[$chatStore.length - 1].content = content;
+		} else {
+			$chatStore = [...$chatStore, { role: 'assistant', content, isError }];
+		}
 	};
 
 	function handleKeyPress(event) {
@@ -36,30 +40,24 @@
 		addNewUserMessage(question);
 		isLoading = true; // Start loading indicator
 
-		if (selectedModel.provider === 'ollama') {
-			fetchOllamaChat($chatStore, selectedModel.id)
-				.then(response => {
-					addNewModelMessage(response);
-				})
-				.catch((error) => {
-					addNewModelMessage(error, true);
-				})
-				.finally(() => {
-					question = ''; // Clear the input after sending
-					isLoading = false;
-				});
-		} else if (selectedModel.provider === 'openai') {
-			fetchOpenAIChat($chatStore, selectedModel.id)
-				.then(response => {
-					addNewModelMessage(response);
-				})
-				.catch((error) => {
-					addNewModelMessage(error, true);
-				})
-				.finally(() => {
-					question = ''; // Clear the input after sending
-					isLoading = false;
-				});
+		try {
+			let messageContent = '';
+
+			const updateMessage = (chunk) => {
+				messageContent += chunk;
+				addNewModelMessage(messageContent);
+			};
+
+			if (selectedModel.provider === 'ollama') {
+				await fetchOllamaChat($chatStore, selectedModel.id, updateMessage);
+			} else if (selectedModel.provider === 'openai') {
+				await fetchOpenAIChat($chatStore, selectedModel.id, updateMessage);
+			}
+		} catch (error) {
+			addNewModelMessage(error, true);
+		} finally {
+			question = ''; // Clear the input after sending
+			isLoading = false;
 		}
 	}
 </script>

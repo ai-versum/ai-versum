@@ -7,12 +7,8 @@ The first step is to prepare environment and communication with Ollama.
 
 ## Features
 
-* 🤖 OpenAI text chat
-* 🤖 Ollama text chat
-* 🤖 OpenAI text completions
-* 🤖 Ollama text completions
-* 🤖 OpenAI model list
-* 🤖 Ollama model list
+* 🤖 OpenAI support for chat streaming and model listing
+* 🤖 Ollama support for chat streaming and model listing
 * 💻 Code Syntax Highlighting: Enjoy enhanced code readability with our syntax highlighting feature.
 
 ## Documentation
