@@ -7,6 +7,8 @@ The first step is to prepare environment and communication with Ollama.
 
 ## Features
 
+* 🤖 OpenAI text chat
+* 🤖 Ollama text chat
 * 🤖 OpenAI text completions
 * 🤖 Ollama text completions
 * 🤖 OpenAI model list

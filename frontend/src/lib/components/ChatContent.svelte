@@ -1,11 +1,19 @@
 <script>
-import { marked } from 'marked';
-
-export let responseMessage = '';
-export let isError = false;
+	import { marked } from 'marked';
+	import { chatStore } from '../stores/ChatStore.js';
 </script>
 
-<p class:error={isError}>{@html marked(responseMessage)}</p>
+<ul>
+	{#each $chatStore as message}
+		{#if (message.role === 'user')}
+			<p class:error={message.isError} style="color: blue;">{@html marked(message.content)}</p>
+		{:else if (message.role === 'assistant')}
+			<p class:error={message.isError} style="color: green;">{@html marked(message.content)}</p>
+		{:else}
+			<p class:error={message.isError}>{@html marked(message.content)}</p>
+		{/if}
+	{/each}
+</ul>
 
 <style>
     p {

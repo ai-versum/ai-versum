@@ -4,19 +4,11 @@
 	import ChatContent from '$lib/components/ChatContent.svelte';
 
 	let selectedModel;
-	let responseMessage = '';
-	let isError = false;
 </script>
 
 <ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
 <hr>
 
-<ChatContent
-	isError="{isError}"
-	responseMessage="{responseMessage}"
-/>
+<ChatContent />
 
-<MessageInput
-	on:errorMessage={(e) => { responseMessage = e.detail; isError = true; }}
-	on:message={(e) => { responseMessage = e.detail; isError = false; }}
-	selectedModel="{selectedModel}" />
+<MessageInput selectedModel="{selectedModel}" />

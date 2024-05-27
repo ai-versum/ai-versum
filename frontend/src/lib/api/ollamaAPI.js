@@ -9,7 +9,7 @@ export const fetchOllamaModels = async () => {
 	} catch (error) {
 		console.error('Error fetching models:', error);
 	}
-}
+};
 
 export const fetchOllamaCompletion = async (question, model) => {
 	try {
@@ -35,4 +35,30 @@ export const fetchOllamaCompletion = async (question, model) => {
 		console.error('Error sending question:', error);
 		throw error;
 	}
-}
+};
+
+export const fetchOllamaChat = async (chatStore, model) => {
+	try {
+		const response = await fetch(`/api/chat/ollama`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ messages: [...chatStore], model , stream: false})
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to send question');
+		}
+
+		const data = await response.json();
+		if (data.message) {
+			return data.message.content;
+		} else {
+			throw new Error('No response from model.');
+		}
+	} catch (error) {
+		console.error('Error sending question:', error);
+		throw error;
+	}
+};

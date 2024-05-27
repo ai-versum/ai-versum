@@ -1,14 +1,20 @@
 <script>
-	import { fetchOllamaCompletion } from '$lib/api/ollamaAPI.js';
-	import { createEventDispatcher } from 'svelte';
-	import { fetchOpenAICompletion } from '$lib/api/openaiAPI.js';
+	import { fetchOllamaChat } from '$lib/api/ollamaAPI.js';
+	import { fetchOpenAIChat } from '$lib/api/openaiAPI.js';
+	import { chatStore } from '../stores/ChatStore.js';
 
 	export let selectedModel;
 
 	let question = '';
 	let isLoading = false;  // New state to track loading status
 
-	const dispatch = createEventDispatcher();
+	const addNewUserMessage = (content, isError = false) => {
+		$chatStore = [...$chatStore, { role: 'user', content, isError }];
+	};
+
+	const addNewModelMessage = (content, isError = false) => {
+		$chatStore = [...$chatStore, { role: 'assistant', content, isError }];
+	};
 
 	function handleKeyPress(event) {
 		if (event.key === 'Enter') {
@@ -19,26 +25,41 @@
 	async function sendQuestion() {
 		if (isLoading) return;  // Prevent sending if already loading
 		if (!selectedModel) {
-			dispatch('errorMessage', 'Please select a model first.');
+			addNewModelMessage('Please select a model first.', true);
 			return;
 		}
 		if (!question) {
-			dispatch('errorMessage', 'Please enter a question.');
+			addNewModelMessage('Please enter a question.', true);
 			return;
 		}
 
+		addNewUserMessage(question);
 		isLoading = true; // Start loading indicator
 
 		if (selectedModel.provider === 'ollama') {
-			fetchOllamaCompletion(question, selectedModel.id)
-				.then(response => dispatch('message', response))
-				.catch((error) => dispatch('errorMessage', error))
-				.finally(() => isLoading = false);
+			fetchOllamaChat($chatStore, selectedModel.id)
+				.then(response => {
+					addNewModelMessage(response);
+				})
+				.catch((error) => {
+					addNewModelMessage(error, true);
+				})
+				.finally(() => {
+					question = ''; // Clear the input after sending
+					isLoading = false;
+				});
 		} else if (selectedModel.provider === 'openai') {
-			fetchOpenAICompletion(question, selectedModel.id)
-				.then(response => dispatch('message', response))
-				.catch((error) => dispatch('errorMessage', error))
-				.finally(() => isLoading = false);
+			fetchOpenAIChat($chatStore, selectedModel.id)
+				.then(response => {
+					addNewModelMessage(response);
+				})
+				.catch((error) => {
+					addNewModelMessage(error, true);
+				})
+				.finally(() => {
+					question = ''; // Clear the input after sending
+					isLoading = false;
+				});
 		}
 	}
 </script>

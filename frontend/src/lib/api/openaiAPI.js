@@ -34,3 +34,29 @@ export const fetchOpenAICompletion = async (question, model) => {
 		throw error;
 	}
 }
+
+export const fetchOpenAIChat = async (chatStore, model) => {
+	try {
+		const response = await fetch(`/api/chat/openai`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ messages: [...chatStore], model , stream: false})
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to send question');
+		}
+
+		const data = await response.json();
+		if (data.choices) {
+			return data.choices[0].message.content;
+		} else {
+			throw new Error('No response from model.');
+		}
+	} catch (error) {
+		console.error('Error sending question:', error);
+		throw error;
+	}
+};
