@@ -29,5 +29,5 @@ API Documentation available after app is up and running: http://localhost:8080/s
 
 ### Setup frontend
 1. Run `npm install` from the frontend directory
-2. Run `npm start` from the frontend directory
+2. Run `npm run dev` from the frontend directory
 3. Open http://localhost:5173 in the browser. You should be able to see the model selection.
