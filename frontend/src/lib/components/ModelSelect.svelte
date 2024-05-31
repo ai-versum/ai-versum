@@ -36,7 +36,6 @@
 	}
 </script>
 
-<!--<label for="model-dropdown">Choose a model:</label>-->
 <select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
 	<option value="" disabled>Select a model</option>
 	{#each models as model}
@@ -45,12 +44,6 @@
 </select>
 
 <style>
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
     select {
         width: 100%;
         padding: 8px 10px;
