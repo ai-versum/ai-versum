@@ -8,7 +8,7 @@
 </script>
 <TailwindCss />
 
-<div class="flex flex-col h-screen">
+<div class="flex flex-col h-screen p-3">
 	<div>
 		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
 		<hr class="my-2" />
@@ -18,8 +18,5 @@
 		<ChatContent />
 	</div>
 
-	<div class="sticky bottom-0 bg-white">
-		<MessageInput selectedModel="{selectedModel}" />
-	</div>
+	<MessageInput selectedModel="{selectedModel}" />
 </div>
-

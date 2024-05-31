@@ -70,8 +70,8 @@
 	}
 </script>
 
-<div class="flex justify-center items-center">
-	<Paper class="solo-paper" elevation={6}>
+<div class="flex justify-center items-center pt-1">
+	<Paper class="solo-paper" elevation={2}>
 		<Icon class="material-icons">search</Icon>
 		<Input
 			bind:value={question}
@@ -98,7 +98,6 @@
         flex-grow: 1;
         max-width: 600px;
         margin: 0 12px;
-        padding: 0 12px;
         height: 48px;
     }
     * :global(.solo-paper > *) {

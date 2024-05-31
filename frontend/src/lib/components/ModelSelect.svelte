@@ -36,7 +36,7 @@
 	}
 </script>
 
-<label for="model-dropdown">Choose a model:</label>
+<!--<label for="model-dropdown">Choose a model:</label>-->
 <select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
 	<option value="" disabled>Select a model</option>
 	{#each models as model}

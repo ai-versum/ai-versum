@@ -1,17 +1,20 @@
 <script>
 	import { marked } from 'marked';
 	import { chatStore } from '../stores/ChatStore.js';
+	import Card from '@smui/card';
 </script>
 
 <ul>
 	{#each $chatStore as message}
-		{#if (message.role === 'user')}
-			<p class:error={message.isError} style="color: blue;">{@html marked(message.content)}</p>
-		{:else if (message.role === 'assistant')}
-			<p class:error={message.isError} style="color: green;">{@html marked(message.content)}</p>
-		{:else}
-			<p class:error={message.isError}>{@html marked(message.content)}</p>
-		{/if}
+		<div class="mb-3">
+			{#if (message.role === 'user')}
+				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{@html marked(message.content)}</Card>
+			{:else if (message.role === 'assistant')}
+				<Card padded>{@html marked(message.content)}</Card>
+			{:else}
+				<p class:error={message.isError}>{@html marked(message.content)}</p>
+			{/if}
+		</div>
 	{/each}
 </ul>
 
