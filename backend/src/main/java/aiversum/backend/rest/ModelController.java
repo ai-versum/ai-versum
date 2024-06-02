@@ -1,12 +1,16 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.rest.dto.Model;
+import aiversum.backend.rest.dto.OllamaModelResponse;
+import aiversum.backend.rest.dto.OpenAiModelResponse;
+import org.reactivestreams.Publisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/models")
@@ -19,24 +23,34 @@ public class ModelController {
         this.propertiesConfig = propertiesConfig;
     }
 
-    @GetMapping(value = "/ollama", produces = "application/json")
-    public Mono<String> listOllamaModels() {
-        if (!propertiesConfig.ollama().enabled()) {
-            return Mono.empty();
+    @GetMapping(produces = "application/json")
+    public Flux<Model> listModels() {
+        Flux<Model> models = Flux.empty();
+        if (propertiesConfig.ollama().enabled()) {
+            models = models.mergeWith(fetchOllamaModels());
         }
-        return webClient.get().uri(propertiesConfig.ollama().baseUrl() + "/api/tags")
-                .retrieve()
-                .bodyToMono(String.class);
+        if (propertiesConfig.openai().enabled()) {
+            models = models.mergeWith(fetchOpenAIModels());
+        }
+        return models;
     }
 
-    @GetMapping(value = "/openai", produces = "application/json")
-    public Mono<String> listOpenAIModels() {
-        if (!propertiesConfig.openai().enabled()) {
-            return Mono.empty();
-        }
+    private Publisher<Model> fetchOllamaModels() {
+        return webClient.get().uri(propertiesConfig.ollama().baseUrl() + "/api/tags")
+                .retrieve()
+                .bodyToMono(OllamaModelResponse.class)
+                .flatMapMany(response -> Flux.fromIterable(response.models()))
+                .map(ollamaModel -> new Model(ollamaModel.name().split(":")[0], "ollama"))
+                .onErrorResume(e -> Flux.empty());
+    }
+
+    private Publisher<Model> fetchOpenAIModels() {
         return webClient.get().uri("https://api.openai.com/v1/models")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(OpenAiModelResponse.class)
+                .flatMapMany(response -> Flux.fromIterable(response.data()))
+                .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
+                .onErrorResume(e -> Flux.empty());
     }
 }

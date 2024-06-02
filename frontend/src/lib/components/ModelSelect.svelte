@@ -1,7 +1,6 @@
 <script>
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { fetchOpenAIModels } from '$lib/api/openaiAPI.js';
-	import { fetchOllamaModels } from '$lib/api/ollamaAPI.js';
+	import { fetchModels } from '$lib/api/modelsAPI.js';
 
 	let models = [];
 	let selectedModel = '';
@@ -9,23 +8,8 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		Promise.all([
-			fetchOpenAIModels(),
-			fetchOllamaModels()
-		]).then(([openaiModels, ollamaModels]) => {
-			const parsedOpenAIModels = openaiModels.map(model => ({
-				id: model.id,
-				name: model.id,
-				model: model.id,
-				provider: 'openai'
-			}));
-			const parsedOllamaModels = ollamaModels.map(model => ({
-				id: model.name,
-				name: model.name,
-				model: model.id,
-				provider: 'ollama'
-			}));
-			models = parsedOpenAIModels.concat(parsedOllamaModels);
+		fetchModels().then(fetchedModels => {
+			models = fetchedModels;
 		});
 	});
 
@@ -39,7 +23,7 @@
 <select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
 	<option value="" disabled>Select a model</option>
 	{#each models as model}
-		<option value={model.id}>{model.name}</option>
+		<option value={model.id}>{model.id}</option>
 	{/each}
 </select>
 
