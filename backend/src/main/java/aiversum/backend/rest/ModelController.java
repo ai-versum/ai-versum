@@ -24,7 +24,7 @@ public class ModelController {
         if (!propertiesConfig.ollama().enabled()) {
             return Mono.empty();
         }
-        return webClient.get().uri(STR."\{propertiesConfig.ollama().baseUrl()}/api/tags")
+        return webClient.get().uri(propertiesConfig.ollama().baseUrl() + "/api/tags")
                 .retrieve()
                 .bodyToMono(String.class);
     }

@@ -30,22 +30,22 @@ public class CompletionController {
     @PostMapping(value = "/generate/{provider}", produces = "application/json")
     public Mono<String> generate(@PathVariable String provider, @RequestBody CompletionCommand completionCommand) {
         return switch (provider) {
-            case "ollama" -> webClient.post().uri(STR."\{ollamaBaseUrl}/api/generate")
+            case "ollama" -> webClient.post().uri(ollamaBaseUrl + "/api/generate")
                     .body(Mono.just(completionCommand), CompletionCommand.class)
                     .retrieve()
                     .bodyToMono(String.class);
             case "openai" -> {
-                String body = STR."""
+                String body = """
                         {
-                            "model": "\{completionCommand.model()}",
+                            "model": "%s",
                                 "messages": [
                                   {
                                     "role": "user",
-                                    "content": "\{completionCommand.prompt()}"
+                                    "content": "%s"
                                   }
                                 ]
                         }
-                        """;
+                        """.formatted(completionCommand.model(), completionCommand.prompt());
                 yield webClient.post().uri("https://api.openai.com/v1/chat/completions")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
                         .contentType(MediaType.APPLICATION_JSON)

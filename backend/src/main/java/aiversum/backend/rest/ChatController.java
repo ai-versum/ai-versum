@@ -26,12 +26,12 @@ public class ChatController {
     @PostMapping(value = "/{provider}", produces = "application/json")
     public Flux<String> generate(@PathVariable String provider, @RequestBody String chatCommand) {
         return switch (provider) {
-            case "ollama" -> webClient.post().uri(STR."\{propertiesConfig.ollama().baseUrl()}/api/chat")
+            case "ollama" -> webClient.post().uri(propertiesConfig.ollama().baseUrl() + "/api/chat")
                     .body(Mono.just(chatCommand), String.class)
                     .retrieve()
                     .bodyToFlux(String.class);
             case "openai" -> webClient.post().uri("https://api.openai.com/v1/chat/completions")
-                    .header(HttpHeaders.AUTHORIZATION, STR."Bearer \{propertiesConfig.openai().apiKey()}")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(chatCommand), String.class)
                     .retrieve()
