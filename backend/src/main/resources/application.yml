@@ -9,3 +9,5 @@ ai.versum:
   openai:
     enabled: true
     apiKey: sk_test_1234567890
+  genai:
+    GOOGLE_API_KEY: AIzaSyAWmrSGdd6g675b3d5Ptm3cKsLpOARNVr0

@@ -53,6 +53,26 @@ public class CompletionController {
                         .retrieve()
                         .bodyToMono(String.class);
             }
+            case "genai" -> {
+                String body = STR."""
+                        {
+                            "contents":[
+                                {"parts":[
+                                    {
+                                        "text":"\{completionCommand.prompt()}"
+                                    }
+                                ],
+                                  "role": "user"
+                                 }
+                        }
+                        """;
+                yield webClient.post()
+                        .uri(STR."https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=\{propertiesConfig.genai().GOOGLE_API_KEY()}")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Mono.just(body), String.class)
+                        .retrieve()
+                        .bodyToMono(String.class);
+            }
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
