@@ -8,6 +8,7 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,7 +48,7 @@ public class ChatController {
                     .bodyToFlux(String.class);
             case "genai" -> {
                 String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
-                        ,chatCommand
+                        ,chatCommand // what here?
                         ,propertiesConfig.genai().apiKey());
 
                 yield webClient.post()
@@ -66,6 +67,7 @@ public class ChatController {
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);
+            case "genai" -> generateGenai(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
@@ -85,6 +87,13 @@ public class ChatController {
                 .baseUrl(propertiesConfig.ollama().baseUrl())
                 .modelName(model)
                 .temperature(0.0)
+                .build();
+
+        return generateResponse(messages, streamingChatLanguageModel);
+    }
+    public Flux<String> generateGenai(String model, String messages){
+        StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
+                .modelName(model)
                 .build();
 
         return generateResponse(messages, streamingChatLanguageModel);

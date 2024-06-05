@@ -61,8 +61,8 @@ public class ModelController {
     }
     private Publisher<Model> fetchGeminiModels(){
         return webClient
-                .get().uri("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash?key="
-                + propertiesConfig.genai().apiKey())
+                .get().uri("https://generativelanguage.googleapis.com/v1beta/models?key="
+                + propertiesConfig.genai().apiKey()) // jakie uri
                 .retrieve()
                 .bodyToMono(GeminiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.geminiModels()))
