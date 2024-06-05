@@ -6,24 +6,23 @@
 
 	let value = '';
 
-	import { fetchOllamaChat } from '$lib/api/ollamaAPI.js';
-	import { fetchOpenAIChat } from '$lib/api/openaiAPI.js';
 	import { chatStore } from '../stores/ChatStore.js';
+	import { fetchAiChat } from '$lib/api/chatAPI.js';
 
 	export let selectedModel;
 
 	let question = '';
 	let isLoading = false;  // New state to track loading status
 
-	const addNewUserMessage = (content, isError = false) => {
-		$chatStore = [...$chatStore, { role: 'user', content, isError }];
+	const addNewUserMessage = (content) => {
+		$chatStore = [...$chatStore, { type: 'USER', text: content }];
 	};
 
-	const addNewModelMessage = (content, isError = false) => {
-		if ($chatStore.length > 0 && $chatStore[$chatStore.length - 1].role === 'assistant') {
-			$chatStore[$chatStore.length - 1].content = content;
+	const addNewModelMessage = (content) => {
+		if ($chatStore.length > 0 && $chatStore[$chatStore.length - 1].type === 'AI') {
+			$chatStore[$chatStore.length - 1].text = content;
 		} else {
-			$chatStore = [...$chatStore, { role: 'assistant', content, isError }];
+			$chatStore = [...$chatStore, { type: 'AI', text: content }];
 		}
 	};
 
@@ -37,11 +36,11 @@
 	async function sendQuestion() {
 		if (isLoading) return;  // Prevent sending if already loading
 		if (!selectedModel) {
-			addNewModelMessage('Please select a model first.', true);
+			addNewModelMessage('Please select a model first.');
 			return;
 		}
 		if (!question) {
-			addNewModelMessage('Please enter a question.', true);
+			addNewModelMessage('Please enter a question.');
 			return;
 		}
 
@@ -56,13 +55,9 @@
 				addNewModelMessage(messageContent);
 			};
 
-			if (selectedModel.provider === 'ollama') {
-				await fetchOllamaChat($chatStore, selectedModel.id, updateMessage);
-			} else if (selectedModel.provider === 'openai') {
-				await fetchOpenAIChat($chatStore, selectedModel.id, updateMessage);
-			}
+			await fetchAiChat($chatStore, selectedModel, updateMessage);
 		} catch (error) {
-			addNewModelMessage(error, true);
+			addNewModelMessage(error);
 		} finally {
 			question = ''; // Clear the input after sending
 			isLoading = false;
