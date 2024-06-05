@@ -1,20 +1,27 @@
 <script>
-	import { marked } from 'marked';
 	import { chatStore } from '../stores/ChatStore.js';
 	import Card from '@smui/card';
+	import AIMessage from '$lib/components/AIMessage.svelte';
 </script>
 
 <ul>
 	{#each $chatStore as message}
-		<div class="mb-3">
-			{#if (message.role === 'user')}
-				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{@html marked(message.content)}</Card>
-			{:else if (message.role === 'assistant')}
-				<Card padded>{@html marked(message.content)}</Card>
+			{#if (message.type === 'USER')}
+				<div class="chat chat-end m-2">
+					<div class="chat-bubble chat-bubble-primary">
+						{message.text}
+					</div>
+				</div>
+			{:else if (message.type === 'AI')}
+				<div class="chat chat-start w-full ">
+					<div class="w-full max-w-full">
+						<AIMessage message="{message.text}" />
+					</div>
+				</div>
 			{:else}
-				<p class:error={message.isError}>{@html marked(message.content)}</p>
+				<p class:error={message.isError}>{message.text}</p>
 			{/if}
-		</div>
+<!--		</div>-->
 	{/each}
 </ul>
 

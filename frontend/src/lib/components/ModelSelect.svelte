@@ -20,20 +20,9 @@
 	}
 </script>
 
-<select id="model-dropdown" bind:value={selectedModel} on:change={handleModelChange}>
+<select id="model-dropdown" class="select w-full max-w-xs select-bordered mb-1" bind:value={selectedModel} on:change={handleModelChange}>
 	<option value="" disabled>Select a model</option>
 	{#each models as model}
 		<option value={model.id}>{model.id}</option>
 	{/each}
 </select>
-
-<style>
-    select {
-        width: 100%;
-        padding: 8px 10px;
-        margin-bottom: 20px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-</style>
