@@ -7,12 +7,12 @@
 <ul>
 	{#each $chatStore as message}
 		<div class="mb-3">
-			{#if (message.role === 'user')}
-				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{@html marked(message.content)}</Card>
-			{:else if (message.role === 'assistant')}
-				<Card padded>{@html marked(message.content)}</Card>
+			{#if (message.type === 'USER')}
+				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{@html marked(message.text)}</Card>
+			{:else if (message.type === 'AI')}
+				<Card padded>{@html marked(message.text)}</Card>
 			{:else}
-				<p class:error={message.isError}>{@html marked(message.content)}</p>
+				<p class:error={message.isError}>{@html marked(message.text)}</p>
 			{/if}
 		</div>
 	{/each}
