@@ -72,37 +72,3 @@
 		</Icon>
 	</label>
 </div>
-
-<style>
-    * :global(.solo-paper) {
-        display: flex;
-        align-items: center;
-        flex-grow: 1;
-        max-width: 600px;
-        margin: 0 12px;
-        height: 48px;
-    }
-
-    * :global(.solo-paper > *) {
-        display: inline-block;
-        margin: 0 12px;
-    }
-
-    * :global(.solo-input) {
-        flex-grow: 1;
-        color: var(--mdc-theme-on-surface, #000);
-    }
-
-    * :global(.solo-input::placeholder) {
-        color: var(--mdc-theme-on-surface, #000);
-        opacity: 0.6;
-    }
-
-    * :global(.solo-fab) {
-        flex-shrink: 0;
-    }
-
-    textarea {
-        resize: none;
-    }
-</style>
