@@ -8,13 +8,10 @@
 </script>
 <TailwindCss />
 
-<div class="flex flex-col h-screen p-3">
-	<div>
-		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
-		<hr class="my-2" />
-	</div>
+<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
+	<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
 
-	<div class="flex-grow overflow-y-auto">
+	<div class="flex-grow overflow-y-auto max-w-[48rem]">
 		<ChatContent />
 	</div>
 
