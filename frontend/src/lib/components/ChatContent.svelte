@@ -1,7 +1,7 @@
 <script>
 	import { chatStore } from '../stores/ChatStore.js';
 	import Card from '@smui/card';
-	import ResponseMessage from '$lib/components/ResponseMessage.svelte';
+	import AIMessage from '$lib/components/AIMessage.svelte';
 </script>
 
 <ul>
@@ -11,7 +11,7 @@
 				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{message.text}</Card>
 			{:else if (message.type === 'AI')}
 				<Card padded>
-					<ResponseMessage message="{message.text}" />
+					<AIMessage message="{message.text}" />
 				</Card>
 			{:else}
 				<p class:error={message.isError}>{message.text}</p>

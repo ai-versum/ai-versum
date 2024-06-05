@@ -2,23 +2,21 @@
 	import hljs from 'highlight.js';
 	import 'highlight.js/styles/github-dark.min.css';
 	import { Icon } from '@smui/common';
-	// import CopyButtonPlugin from 'highlightjs-copy';
 
 	export let lang = '';
 	export let code = '';
 
 	let copied = false;
 
-	const copyCode = () => {
-		console.log("copied");
-	};
+	const copyText = () => {
+		navigator.clipboard.writeText(code).then(
+			() => copied = true,
+			(err) => console.error('copy failed', err)
+		);
+	}
 
-	// hljs.addPlugin(new CopyButtonPlugin({
-	// 	callback: (text, el) => copied = true,
-	// }))
+	$: highlightedCode = hljs.highlightAuto(code, hljs.getLanguage(lang)?.aliases).value;
 
-	console.log("lang:", lang);
-	$: highlightedCode = code ? hljs.highlightAuto(code, hljs.getLanguage(lang)?.aliases).value : '';
 </script>
 
 {#if code}
@@ -27,10 +25,15 @@
 			class="flex items-center relative text-token-text-secondary bg-token-main-surface-secondary px-4 py-2 text-xs font-sans justify-between rounded-t-md"
 		>
 			<span>{@html lang}</span>
-			<button class="flex items-center" on:click={copyCode}
-			>
-				<Icon class="material-icons text-xs">content_copy</Icon>{copied ? 'Copied' : 'Copy Code'}</button
-			>
+			<button class="flex items-center" on:click={copyText}>
+				{#if copied}
+					<Icon class="material-icons text-xs mr-0.5">check</Icon>
+					Copied!
+				{:else}
+					<Icon class="material-icons text-xs mr-0.5">content_copy</Icon>
+					Copy code
+				{/if}
+			</button>
 		</div>
 
 		<pre class="overflow-y-auto p-4"><code
@@ -40,7 +43,4 @@
 {/if}
 
 <style>
-    .material-icons {
-        font-size: 0.5rem;
-    }
 </style>
