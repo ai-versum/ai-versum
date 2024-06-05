@@ -1,5 +1,7 @@
+import daisyui from 'daisyui';
+
 export default {
-  plugins: [],
+  plugins: [daisyui],
   theme: {
     extend: {},
   },
@@ -8,4 +10,7 @@ export default {
     extend: {},
   },
   darkmode: false, // or 'media' or 'class'
+  daisyui: {
+    themes: ["light", "dark", "cupcake", 'wireframe'],
+  },
 }

@@ -6,17 +6,22 @@
 
 <ul>
 	{#each $chatStore as message}
-		<div class="mb-3 mx-auto flex flex-1 gap-3 text-base juice:gap-4 juice:md:gap-6 md:max-w-3xl lg:max-w-[40rem] xl:max-w-[48rem]">
 			{#if (message.type === 'USER')}
-				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{message.text}</Card>
+				<div class="chat chat-end m-2">
+					<div class="chat-bubble chat-bubble-primary">
+						{message.text}
+					</div>
+				</div>
 			{:else if (message.type === 'AI')}
-				<Card class="max-w-full" padded>
-					<AIMessage message="{message.text}" />
-				</Card>
+				<div class="chat chat-start w-full ">
+					<div class="w-full max-w-full">
+						<AIMessage message="{message.text}" />
+					</div>
+				</div>
 			{:else}
 				<p class:error={message.isError}>{message.text}</p>
 			{/if}
-		</div>
+<!--		</div>-->
 	{/each}
 </ul>
 
