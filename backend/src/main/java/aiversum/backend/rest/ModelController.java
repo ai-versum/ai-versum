@@ -1,6 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.rest.dto.GeminiModelResponse;
 import aiversum.backend.rest.dto.Model;
 import aiversum.backend.rest.dto.OllamaModelResponse;
 import aiversum.backend.rest.dto.OpenAiModelResponse;
@@ -32,6 +33,9 @@ public class ModelController {
         if (propertiesConfig.openai().enabled()) {
             models = models.mergeWith(fetchOpenAIModels());
         }
+        if (propertiesConfig.genai().enabled()){
+            models = models.mergeWith(fetchGeminiModels());
+        }
         return models;
     }
 
@@ -52,5 +56,16 @@ public class ModelController {
                 .flatMapMany(response -> Flux.fromIterable(response.data()))
                 .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
                 .onErrorResume(e -> Flux.empty());
+    }
+    private Publisher<Model> fetchGeminiModels(){
+        return webClient
+                .get().uri("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash?key="
+                + propertiesConfig.genai().apiKey())
+                .retrieve()
+                .bodyToMono(GeminiModelResponse.class)
+                .flatMapMany(response -> Flux.fromIterable(response.geminiModels()))
+                .map(genaiModel -> new Model(genaiModel.name(), "genai"))
+                .onErrorResume(e -> Flux.empty());
+
     }
 }

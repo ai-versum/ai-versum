@@ -54,20 +54,24 @@ public class CompletionController {
                         .bodyToMono(String.class);
             }
             case "genai" -> {
-                String body = STR."""
+                String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
+                        ,completionCommand.model()
+                        ,propertiesConfig.genai().apiKey());
+                String body = """
                         {
                             "contents":[
                                 {"parts":[
                                     {
-                                        "text":"\{completionCommand.prompt()}"
+                                        "text":"%s"
                                     }
                                 ],
                                   "role": "user"
                                  }
                         }
-                        """;
-                yield webClient.post()
-                        .uri(STR."https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=\{propertiesConfig.genai().GOOGLE_API_KEY()}")
+                        """.formatted(completionCommand.prompt());
+                yield webClient
+                        .post()
+                        .uri(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(Mono.just(body), String.class)
                         .retrieve()

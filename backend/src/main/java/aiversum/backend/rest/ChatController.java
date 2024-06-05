@@ -36,12 +36,18 @@ public class ChatController {
                     .body(Mono.just(chatCommand), String.class)
                     .retrieve()
                     .bodyToFlux(String.class);
-            case "genai" -> webClient.post()
-                    .uri(STR."https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=\{propertiesConfig.genai().GOOGLE_API_KEY()}")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(chatCommand), String.class)
-                    .retrieve()
-                    .bodyToFlux(String.class);
+            case "genai" -> {
+                String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
+                        ,chatCommand
+                        ,propertiesConfig.genai().apiKey());
+
+                yield webClient.post()
+                .uri(endpoint)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(chatCommand), String.class)
+                .retrieve()
+                .bodyToFlux(String.class);
+            }
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
