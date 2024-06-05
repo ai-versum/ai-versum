@@ -10,7 +10,7 @@
 			{#if (message.type === 'USER')}
 				<Card class="bg-gray-200 w-1/2 right-0 ml-auto rounded-2xl" padded>{message.text}</Card>
 			{:else if (message.type === 'AI')}
-				<Card padded>
+				<Card class="max-w-full" padded>
 					<AIMessage message="{message.text}" />
 				</Card>
 			{:else}

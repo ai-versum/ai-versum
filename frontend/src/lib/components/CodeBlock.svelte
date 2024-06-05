@@ -21,9 +21,7 @@
 
 {#if code}
 	<div class="dark bg-gray-950 rounded-md border-[0.5px] border-token-border-medium text-white">
-		<div
-			class="flex items-center relative text-token-text-secondary bg-token-main-surface-secondary px-4 py-2 text-xs font-sans justify-between rounded-t-md"
-		>
+		<div class="flex items-center relative px-4 py-2 text-xs font-sans justify-between rounded-t-md">
 			<span>{@html lang}</span>
 			<button class="flex items-center" on:click={copyText}>
 				{#if copied}
@@ -36,9 +34,9 @@
 			</button>
 		</div>
 
-		<pre class="overflow-y-auto p-4"><code
-			class="language-{lang} !whitespace-pre hljs">{@html highlightedCode || code}</code
-		></pre>
+		<pre class="overflow-y-auto p-4">
+			<code class="language-{lang} !whitespace-pre hljs">{@html highlightedCode || code}</code>
+		</pre>
 	</div>
 {/if}
 
