@@ -28,6 +28,12 @@
 		rel="stylesheet"
 	/>
 	%sveltekit.head%
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const theme = localStorage.getItem("theme") || "cupcake";
+			document.documentElement.setAttribute("data-theme", theme);
+		});
+	</script>
 </head>
 <style>
     :root {
