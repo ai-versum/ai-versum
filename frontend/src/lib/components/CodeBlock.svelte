@@ -13,7 +13,7 @@
 			() => copied = true,
 			(err) => console.error('copy failed', err)
 		);
-	}
+	};
 
 	$: highlightedCode = hljs.highlightAuto(code, hljs.getLanguage(lang)?.aliases).value;
 
@@ -39,6 +39,3 @@
 		</pre>
 	</div>
 {/if}
-
-<style>
-</style>
