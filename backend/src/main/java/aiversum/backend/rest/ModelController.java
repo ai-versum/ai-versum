@@ -5,7 +5,6 @@ import aiversum.backend.rest.dto.Model;
 import aiversum.backend.rest.dto.OllamaModelResponse;
 import aiversum.backend.rest.dto.OpenAiModelResponse;
 import org.reactivestreams.Publisher;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/models")
+@RequestMapping("/api/models")
 public class ModelController {
     private final WebClient webClient;
     private final PropertiesConfig propertiesConfig;
@@ -24,7 +23,7 @@ public class ModelController {
         this.propertiesConfig = propertiesConfig;
     }
 
-    @Cacheable("models")
+//    @Cacheable("models")
     @GetMapping(produces = "application/json")
     public Flux<Model> listModels() {
         Flux<Model> models = Flux.empty();

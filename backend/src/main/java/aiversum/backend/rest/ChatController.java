@@ -22,7 +22,7 @@ import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ChatController {
     private final WebClient webClient;
     private final PropertiesConfig propertiesConfig;
