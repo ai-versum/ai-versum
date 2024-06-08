@@ -93,7 +93,10 @@ public class ChatController {
     }
     public Flux<String> generateGenai(String model, String messages){
         StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
+                .project("") /** The PROJECT field represents the variable you set when creating a new Google Cloud project. */
                 .modelName(model)
+                .location("europe-west1")
+                .temperature(0.0f)
                 .build();
 
         return generateResponse(messages, streamingChatLanguageModel);

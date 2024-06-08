@@ -10,4 +10,5 @@ ai.versum:
     enabled: true
     apiKey: sk_test_1234567890
   genai:
+    enabled: true
     apiKey: gemini_test_1234
