@@ -4,7 +4,7 @@ spring:
 
 ai.versum:
   ollama:
-    enabled: true
+    enabled: false
     baseUrl: http://localhost:11434
   openai:
     enabled: true

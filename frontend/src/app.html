@@ -6,14 +6,6 @@
 	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<!--		START SMUI-->
-	<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
-	<link
-		rel="stylesheet"
-		href="/smui-dark.css"
-		media="screen and (prefers-color-scheme: dark)"
-	/>
-	<!--		END SMUI-->
 	<!-- Hint where we get fonts from. -->
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,23 +27,6 @@
 		});
 	</script>
 </head>
-<style>
-    :root {
-        --primary-color: #4A90E2;
-        --text-color: #333;
-        --background-color: #f5f5f5;
-        --button-bg-color: #4A90E2;
-        --button-bg-color-darker: #005EAA;
-        --button-text-color: #fff;
-        --error-color: #D32F2F;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--text-color);
-        margin: 0;
-    }
-</style>
 <body data-sveltekit-preload-data="hover">
 <div style="display: contents">%sveltekit.body%</div>
 </body>

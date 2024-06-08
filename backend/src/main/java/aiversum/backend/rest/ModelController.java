@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/models")
+@RequestMapping("/api/models")
 public class ModelController {
     private final WebClient webClient;
     private final PropertiesConfig propertiesConfig;

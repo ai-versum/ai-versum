@@ -1,0 +1,11 @@
+services:
+  ai-versum:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: konradpo/ai-versum:latest
+    environment:
+      AI_VERSUM_OPENAI_ENABLED: true
+      AI_VERSUM_OPENAI_APIKEY: <YOUR_OPENAI_KEY>
+    ports:
+      - "8080:8080"
