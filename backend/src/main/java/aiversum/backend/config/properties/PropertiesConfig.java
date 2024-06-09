@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record PropertiesConfig(
         OllamaProperties ollama,
         OpenaiProperties openai,
-        GenerativeaiProperties genai
+        VertexaiProperties genai
 ) {
 }
 

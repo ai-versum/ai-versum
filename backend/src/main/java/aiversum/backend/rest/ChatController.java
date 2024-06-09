@@ -67,7 +67,7 @@ public class ChatController {
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);
-            case "genai" -> generateGenai(model, chatCommand);
+            case "vertexai" -> generateVertexai(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
@@ -91,7 +91,7 @@ public class ChatController {
 
         return generateResponse(messages, streamingChatLanguageModel);
     }
-    public Flux<String> generateGenai(String model, String messages){
+    public Flux<String> generateVertexai(String model, String messages){
         StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
                 .project("") /** The PROJECT field represents the variable you set when creating a new Google Cloud project. */
                 .modelName(model)

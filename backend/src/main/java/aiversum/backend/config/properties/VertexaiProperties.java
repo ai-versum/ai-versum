@@ -1,6 +1,6 @@
 package aiversum.backend.config.properties;
 
-public record GenerativeaiProperties (
+public record VertexaiProperties(
         String apiKey,
         boolean enabled
 ){
