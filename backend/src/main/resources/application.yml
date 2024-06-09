@@ -1,7 +1,13 @@
 spring:
   application:
     name: backend
-
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:memory:myDb?cache=shared
+    username: sa
+    password: sa
+    hbm2ddl.auto: create-drop
 ai.versum:
   ollama:
     enabled: false
