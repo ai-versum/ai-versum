@@ -33,35 +33,6 @@ public class ChatController {
         this.propertiesConfig = propertiesConfig;
     }
 
-    @PostMapping(value = "/{provider}", produces = "application/json")
-    public Flux<String> generate(@PathVariable String provider, @RequestBody String chatCommand) {
-        return switch (provider) {
-            case "ollama" -> webClient.post().uri(propertiesConfig.ollama().baseUrl() + "/api/chat")
-                    .body(Mono.just(chatCommand), String.class)
-                    .retrieve()
-                    .bodyToFlux(String.class);
-            case "openai" -> webClient.post().uri("https://api.openai.com/v1/chat/completions")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(chatCommand), String.class)
-                    .retrieve()
-                    .bodyToFlux(String.class);
-            case "genai" -> {
-                String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
-                        ,chatCommand // what here?
-                        ,propertiesConfig.genai().apiKey());
-
-                yield webClient.post()
-                .uri(endpoint)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(chatCommand), String.class)
-                .retrieve()
-                .bodyToFlux(String.class);
-            }
-            case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
-        };
-    }
-
     @PostMapping(value = "/{provider}/{model}", produces = "application/json")
     public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody String chatCommand) {
         return switch (provider) {
@@ -93,10 +64,9 @@ public class ChatController {
     }
     public Flux<String> generateVertexai(String model, String messages){
         StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
-                .project("") /** The PROJECT field represents the variable you set when creating a new Google Cloud project. */
+                .project(propertiesConfig.vertexai().projectName())
+                .location(propertiesConfig.vertexai().location())
                 .modelName(model)
-                .location("europe-west1")
-                .temperature(0.0f)
                 .build();
 
         return generateResponse(messages, streamingChatLanguageModel);

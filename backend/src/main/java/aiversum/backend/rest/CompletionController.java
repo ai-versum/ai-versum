@@ -53,10 +53,10 @@ public class CompletionController {
                         .retrieve()
                         .bodyToMono(String.class);
             }
-            case "genai" -> {
+            case "vertexai" -> {
                 String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
                         ,completionCommand.model()
-                        ,propertiesConfig.genai().apiKey());
+                        ,propertiesConfig.vertexai().apiKey());
                 String body = """
                         {
                             "contents":[

@@ -1,7 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
-import aiversum.backend.rest.dto.GeminiModelResponse;
+import aiversum.backend.rest.dto.VertexaiModelResponse;
 import aiversum.backend.rest.dto.Model;
 import aiversum.backend.rest.dto.OllamaModelResponse;
 import aiversum.backend.rest.dto.OpenAiModelResponse;
@@ -35,8 +35,8 @@ public class ModelController {
         if (propertiesConfig.openai().enabled()) {
             models = models.mergeWith(fetchOpenAIModels());
         }
-        if (propertiesConfig.genai().enabled()){
-            models = models.mergeWith(fetchGeminiModels());
+        if (propertiesConfig.vertexai().enabled()){
+            models = models.mergeWith(fetchVertexaiModels());
         }
         return models;
     }
@@ -59,14 +59,15 @@ public class ModelController {
                 .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
                 .onErrorResume(e -> Flux.empty());
     }
-    private Publisher<Model> fetchGeminiModels(){
+    private Publisher<Model> fetchVertexaiModels(){
         return webClient
                 .get().uri("https://generativelanguage.googleapis.com/v1beta/models?key="
-                + propertiesConfig.genai().apiKey())
+                + propertiesConfig.vertexai().apiKey())
                 .retrieve()
-                .bodyToMono(GeminiModelResponse.class)
-                .flatMapMany(response -> Flux.fromIterable(response.geminiModels()))
-                .map(genaiModel -> new Model(genaiModel.name(), "genai"))
+                .bodyToMono(VertexaiModelResponse.class)
+                .flatMapMany(response -> Flux.fromIterable(response.models()))
+                .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "vertexai"))
+                .doOnError(error -> error.printStackTrace())
                 .onErrorResume(e -> Flux.empty());
 
     }
