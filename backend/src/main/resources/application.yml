@@ -8,6 +8,8 @@ spring:
     username: sa
     password: sa
     hbm2ddl.auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
 ai.versum:
   ollama:
     enabled: false

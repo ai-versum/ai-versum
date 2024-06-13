@@ -24,7 +24,7 @@ public class ModelController {
         this.propertiesConfig = propertiesConfig;
     }
 
-    @Cacheable("models")
+//    @Cacheable("models")
     @GetMapping(produces = "application/json")
     public Flux<Model> listModels() {
         Flux<Model> models = Flux.empty();
