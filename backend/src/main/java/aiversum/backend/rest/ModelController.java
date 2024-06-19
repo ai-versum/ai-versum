@@ -61,7 +61,7 @@ public class ModelController {
     }
     private Publisher<Model> fetchVertexaiModels(){
         return webClient
-                .get().uri("https://generativelanguage.googleapis.com/v1beta/models?key="
+                .get().uri("https://generativelanguage.googleapis.com/v1/models?key="
                 + propertiesConfig.vertexai().apiKey())
                 .retrieve()
                 .bodyToMono(VertexaiModelResponse.class)

@@ -54,7 +54,7 @@ public class CompletionController {
                         .bodyToMono(String.class);
             }
             case "vertexai" -> {
-                String endpoint = String.format("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s"
+                String endpoint = String.format("https://generativelanguage.googleapis.com/v1/models/%s:generateContent?key=%s"
                         ,completionCommand.model()
                         ,propertiesConfig.vertexai().apiKey());
                 String body = """
