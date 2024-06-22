@@ -25,3 +25,19 @@ ai.versum:
     # Secret key used to interact with OpenAI models
     apiKey: sk_test_1234567890
 ```
+### VertexAI for Gemini
+To be able to interact with Gemini models it's required to setup Project API Key by creating a new project and inclusion of API services (VertexAI API) on https://console.cloud.google.com to interact with Gemini API.
+
+There are available four configuration variables with default values as follow:
+```yml
+ai.versum:
+  vertexai:
+    # Enables Gemini models
+    enabled: true
+    # Secret key used to interact with Gemini models
+    apiKey: api_test_1234
+    # Project name used to connect with project on Google Cloud
+    projectName: test_project
+    # Setting proper location for Gemini models. Gemini is served from different regions
+    location: your-location
+```
