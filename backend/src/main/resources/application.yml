@@ -1,7 +1,15 @@
 spring:
   application:
     name: backend
-
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:memory:myDb?cache=shared
+    username: sa
+    password: sa
+    hbm2ddl.auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
 ai.versum:
   ollama:
     enabled: false
@@ -14,3 +22,10 @@ ai.versum:
     apiKey: api_test_1234
     projectName: test_project
     location: europe-central2
+
+
+security:
+  jwt:
+    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+# 1h in millisecond
+    expiration-time: 3600000
