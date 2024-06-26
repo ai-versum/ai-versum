@@ -17,6 +17,12 @@ ai.versum:
   openai:
     enabled: true
     apiKey: sk_test_1234567890
+  vertexai:
+    enabled: true
+    apiKey: api_test_1234
+    projectName: test_project
+    location: europe-central2
+
 
 security:
   jwt:

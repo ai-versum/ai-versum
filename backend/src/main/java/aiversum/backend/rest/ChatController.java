@@ -8,6 +8,7 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,28 +33,12 @@ public class ChatController {
         this.propertiesConfig = propertiesConfig;
     }
 
-    @PostMapping(value = "/{provider}", produces = "application/json")
-    public Flux<String> generate(@PathVariable String provider, @RequestBody String chatCommand) {
-        return switch (provider) {
-            case "ollama" -> webClient.post().uri(propertiesConfig.ollama().baseUrl() + "/api/chat")
-                    .body(Mono.just(chatCommand), String.class)
-                    .retrieve()
-                    .bodyToFlux(String.class);
-            case "openai" -> webClient.post().uri("https://api.openai.com/v1/chat/completions")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + propertiesConfig.openai().apiKey())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(chatCommand), String.class)
-                    .retrieve()
-                    .bodyToFlux(String.class);
-            case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
-        };
-    }
-
     @PostMapping(value = "/{provider}/{model}", produces = "application/json")
     public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody String chatCommand) {
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);
+            case "vertexai" -> generateVertexai(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
@@ -73,6 +58,15 @@ public class ChatController {
                 .baseUrl(propertiesConfig.ollama().baseUrl())
                 .modelName(model)
                 .temperature(0.0)
+                .build();
+
+        return generateResponse(messages, streamingChatLanguageModel);
+    }
+    public Flux<String> generateVertexai(String model, String messages){
+        StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
+                .project(propertiesConfig.vertexai().projectName())
+                .location(propertiesConfig.vertexai().location())
+                .modelName(model)
                 .build();
 
         return generateResponse(messages, streamingChatLanguageModel);

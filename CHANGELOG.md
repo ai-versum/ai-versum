@@ -27,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ollama models list
 - OpenAI models list
+- Vertex AI and Gemini models list
 - Ollama chat
 - OpenAI chat
+- Vertex AI and Gemini chat
 - Streaming responses
 - Changelog

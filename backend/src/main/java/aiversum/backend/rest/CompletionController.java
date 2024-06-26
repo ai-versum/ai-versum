@@ -53,6 +53,30 @@ public class CompletionController {
                         .retrieve()
                         .bodyToMono(String.class);
             }
+            case "vertexai" -> {
+                String endpoint = String.format("https://generativelanguage.googleapis.com/v1/models/%s:generateContent?key=%s"
+                        ,completionCommand.model()
+                        ,propertiesConfig.vertexai().apiKey());
+                String body = """
+                        {
+                            "contents":[
+                                {"parts":[
+                                    {
+                                        "text":"%s"
+                                    }
+                                ],
+                                  "role": "user"
+                                 }
+                        }
+                        """.formatted(completionCommand.prompt());
+                yield webClient
+                        .post()
+                        .uri(endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Mono.just(body), String.class)
+                        .retrieve()
+                        .bodyToMono(String.class);
+            }
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
