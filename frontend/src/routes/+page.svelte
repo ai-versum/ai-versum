@@ -5,15 +5,24 @@
 	import ChatContent from '$lib/components/ChatContent.svelte';
 
 	let selectedModel;
+
+	import { isAuthenticated } from '../lib/stores/auth';
+	import Login from '$lib/components/Login.svelte';
+
 </script>
-<TailwindCss />
 
-<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
-	<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+{#if $isAuthenticated}
+	<TailwindCss />
 
-	<div class="flex-grow overflow-y-auto max-w-[48rem]">
-		<ChatContent />
+	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
+		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+
+		<div class="flex-grow overflow-y-auto max-w-[48rem]">
+			<ChatContent />
+		</div>
+
+		<MessageInput selectedModel="{selectedModel}" />
 	</div>
-
-	<MessageInput selectedModel="{selectedModel}" />
-</div>
+{:else}
+	<Login/>
+{/if}
