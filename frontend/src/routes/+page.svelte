@@ -11,9 +11,8 @@
 
 </script>
 
+<TailwindCss />
 {#if $isAuthenticated}
-	<TailwindCss />
-
 	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
 		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
 
