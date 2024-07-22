@@ -10,8 +10,6 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -42,7 +39,6 @@ public class ChatController {
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
-
     public Flux<String> generateOpenai(String model, String messages) {
         StreamingChatLanguageModel streamingChatLanguageModel = OpenAiStreamingChatModel.builder()
                 .modelName(model)
