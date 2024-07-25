@@ -5,34 +5,25 @@ import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.openai.OpenAiImageModel;
 import dev.langchain4j.model.output.Response;
-import dev.langchain4j.data.message.*;
-import dev.langchain4j.model.StreamingResponseHandler;
-import dev.langchain4j.model.chat.StreamingChatLanguageModel;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
-
-import java.net.URI;
-
 
 @RestController
 @RequestMapping("/api/image/")
-public class ImageGenerationController {
+public class ImageController {
 
     private final PropertiesConfig propertiesConfig;
 
-    public ImageGenerationController(PropertiesConfig propertiesConfig) {
+    public ImageController(PropertiesConfig propertiesConfig) {
         this.propertiesConfig = propertiesConfig;
     }
 
 
     @PostMapping(value = "/openai/{model}", produces = "application/json")
-    public URI generateOpenaiImage(@PathVariable String model, @RequestBody String prompt) {
+    public String generateOpenaiImage(@PathVariable String model, @RequestBody String prompt) {
 
         ImageModel imageModel = OpenAiImageModel.builder()
                 .apiKey(propertiesConfig.openai().apiKey())
@@ -41,7 +32,7 @@ public class ImageGenerationController {
                 .build();
 
         Response<Image> response = imageModel.generate(prompt);
-        return response.content().url();
+        return response.content().url().toString();
     }
 
 }
