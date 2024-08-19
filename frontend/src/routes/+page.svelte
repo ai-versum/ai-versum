@@ -13,8 +13,14 @@
 	let loading = true;
 	onMount(async () => {
 		await fetch('/api/auth/check-session')
-			.then(() => isAuthenticated.set(true))
-			.catch()
+			.then((response) => {
+				if (response.ok) {
+					isAuthenticated.set(true);
+				} else {
+					isAuthenticated.set(false);
+				}
+			})
+			.catch(() => isAuthenticated.set(false))
 			.finally(() => loading = false);
 	});
 
