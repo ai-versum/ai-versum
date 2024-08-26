@@ -3,8 +3,6 @@
 	import { chatStore } from '../stores/ChatStore.js';
 	import { fetchAiChat } from '$lib/api/chatAPI.js';
 
-	let value = '';
-
 	export let selectedModel;
 
 	let question = '';

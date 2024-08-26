@@ -1,6 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.model.StreamingResponseHandler;
@@ -10,27 +11,23 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
-    private final WebClient webClient;
     private final PropertiesConfig propertiesConfig;
+    private final ImageController imageController;
 
-    public ChatController(WebClient webClient, PropertiesConfig propertiesConfig) {
-        this.webClient = webClient;
+    public ChatController(PropertiesConfig propertiesConfig, ImageController imageController) {
         this.propertiesConfig = propertiesConfig;
+        this.imageController = imageController;
     }
 
     @PostMapping(value = "/{provider}/{model}", produces = "application/json")
@@ -44,6 +41,10 @@ public class ChatController {
     }
 
     public Flux<String> generateOpenai(String model, String messages) {
+        if (model.contains("dall")) {
+            String imageUrl = imageController.generateOpenaiImage(model, ChatMessageDeserializer.messagesFromJson(messages).getLast().text());
+            return Flux.just(MarkdownUtil.wrapImage("image", imageUrl));
+        }
         StreamingChatLanguageModel streamingChatLanguageModel = OpenAiStreamingChatModel.builder()
                 .modelName(model)
                 .apiKey(propertiesConfig.openai().apiKey())
@@ -62,7 +63,8 @@ public class ChatController {
 
         return generateResponse(messages, streamingChatLanguageModel);
     }
-    public Flux<String> generateVertexai(String model, String messages){
+
+    public Flux<String> generateVertexai(String model, String messages) {
         StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
                 .project(propertiesConfig.vertexai().projectName())
                 .location(propertiesConfig.vertexai().location())
