@@ -1,6 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.rest.dto.ImageQuery;
 import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
@@ -31,18 +32,18 @@ public class ChatController {
     }
 
     @PostMapping(value = "/{provider}/{model}", produces = "application/json")
-    public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody String chatCommand) {
+    public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody ImageQuery imageQuery, @RequestBody String chatCommand) {
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
-            case "openai" -> generateOpenai(model, chatCommand);
+            case "openai" -> generateOpenai(model, imageQuery, chatCommand);
             case "vertexai" -> generateVertexai(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
 
-    public Flux<String> generateOpenai(String model, String messages) {
+    public Flux<String> generateOpenai(String model, ImageQuery imageQuery, String messages) {
         if (model.contains("dall")) {
-            String imageUrl = imageController.generateOpenaiImage(model, ChatMessageDeserializer.messagesFromJson(messages).getLast().text());
+            String imageUrl = imageController.generateOpenaiImage(model, imageQuery.query()); // here method generateOpenaiImage should return String and ImageQuery
             return Flux.just(MarkdownUtil.wrapImage("image", imageUrl));
         }
         StreamingChatLanguageModel streamingChatLanguageModel = OpenAiStreamingChatModel.builder()
