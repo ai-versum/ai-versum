@@ -5,15 +5,44 @@
 	import ChatContent from '$lib/components/ChatContent.svelte';
 
 	let selectedModel;
+
+	import { isAuthenticated } from '../lib/stores/auth';
+	import Login from '$lib/components/Login.svelte';
+	import { onMount } from 'svelte';
+
+	let loading = true;
+	onMount(async () => {
+		await fetch('/api/auth/check-session')
+			.then((response) => {
+				if (response.ok) {
+					isAuthenticated.set(true);
+				} else {
+					isAuthenticated.set(false);
+				}
+			})
+			.catch(() => isAuthenticated.set(false))
+			.finally(() => loading = false);
+	});
+
 </script>
+
 <TailwindCss />
+{#if $isAuthenticated}
+	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
+		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
 
-<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
-	<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+		<div class="flex-grow overflow-y-auto max-w-[64rem]">
+			<ChatContent />
+		</div>
 
-	<div class="flex-grow overflow-y-auto max-w-[48rem]">
-		<ChatContent />
+		<MessageInput selectedModel="{selectedModel}" />
 	</div>
-
-	<MessageInput selectedModel="{selectedModel}" />
-</div>
+{:else}
+	{#if loading}
+		<div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
+			<span class="loading loading-infinity w-[5rem]"></span>
+		</div>
+	{:else}
+		<Login />
+	{/if}
+{/if}

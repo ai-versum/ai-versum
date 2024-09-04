@@ -46,7 +46,7 @@ public class ModelController {
                 .retrieve()
                 .bodyToMono(OllamaModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
-                .map(ollamaModel -> new Model(ollamaModel.name().split(":")[0], "ollama"))
+                .map(ollamaModel -> new Model(ollamaModel.name(), "ollama"))
                 .onErrorResume(e -> Flux.empty());
     }
 

@@ -1,6 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.util.MarkdownUtil;
 import aiversum.backend.rest.dto.ImageQuery;
 import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
@@ -12,6 +13,8 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
