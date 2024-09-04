@@ -43,7 +43,7 @@ public class ChatController {
 
     public Flux<String> generateOpenai(String model, ImageQuery imageQuery, String messages) {
         if (model.contains("dall")) {
-            String imageUrl = imageController.generateOpenaiImage(model, imageQuery.query()); // here method generateOpenaiImage should return String and ImageQuery
+            String imageUrl = imageController.generateOpenaiImage(model, imageQuery);
             return Flux.just(MarkdownUtil.wrapImage("image", imageUrl));
         }
         StreamingChatLanguageModel streamingChatLanguageModel = OpenAiStreamingChatModel.builder()
