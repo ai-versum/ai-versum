@@ -1,7 +1,6 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
-import aiversum.backend.rest.dto.ImageQuery;
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.openai.OpenAiImageModel;
