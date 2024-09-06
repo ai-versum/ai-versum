@@ -7,8 +7,8 @@ ai.versum:
     enabled: true
     baseUrl: http://localhost:11434
   openai:
-    enabled: false
-    apiKey: sk_test_1234567890
+    enabled: true
+    apiKey: test
   vertexai:
     enabled: false
     apiKey: api_test_1234

@@ -4,4 +4,5 @@ public record ImageQuery(
         String query,
         ImageOptions options
 ) {
+
 }

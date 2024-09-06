@@ -3,7 +3,6 @@ package aiversum.backend.rest;
 import aiversum.backend.config.properties.PropertiesConfig;
 import aiversum.backend.util.MarkdownUtil;
 import aiversum.backend.rest.dto.ImageQuery;
-import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.model.StreamingResponseHandler;
@@ -42,7 +41,7 @@ public class ChatController {
         };
     }
 
-    public Flux<String> generateOpenai(String model, ImageQuery imageQuery, String messages) {
+    public Flux<String> generateOpenai(String model, ImageQuery imageQuery, String messages)  {
         if (model.contains("dall")) {
             String imageUrl = imageController.generateOpenaiImage(model, imageQuery);
             return Flux.just(MarkdownUtil.wrapImage("image", imageUrl));

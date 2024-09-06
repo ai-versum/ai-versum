@@ -24,9 +24,7 @@ public class ImageController {
 
 
     @PostMapping(value = "/openai/{model}", produces = "application/json")
-    public String generateOpenaiImage(@PathVariable String model, @RequestBody ImageQuery imageQuery) {
-        // I have removed the method which retrieves data, but output is:
-        // Cannot deserialize value of type ImageQuery from Array value (token 'JsonToken.Start_Array')
+    public String generateOpenaiImage(@PathVariable String model, @RequestBody ImageQuery imageQuery)  {
 
         ImageModel imageModel = OpenAiImageModel.builder()
                 .apiKey(propertiesConfig.openai().apiKey())
@@ -34,7 +32,6 @@ public class ImageController {
                 .size(imageQuery.options().sizeOfImage())
                 .style(imageQuery.options().styleOfImage())
                 .build();
-
         Response<Image> response = imageModel.generate(imageQuery.query());
         return response.content().url().toString();
     }
