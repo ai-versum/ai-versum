@@ -1,8 +1,8 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.rest.dto.ChatCommand;
 import aiversum.backend.util.MarkdownUtil;
-import aiversum.backend.rest.dto.ImageQuery;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.model.StreamingResponseHandler;
@@ -32,18 +32,18 @@ public class ChatController {
     }
 
     @PostMapping(value = "/{provider}/{model}", produces = "application/json")
-    public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody ImageQuery imageQuery, @RequestBody String chatCommand) {
+    public Flux<String> chat(@PathVariable String provider, @PathVariable String model, @RequestBody ChatCommand chatCommand) {
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
-            case "openai" -> generateOpenai(model, imageQuery, chatCommand);
+            case "openai" -> generateOpenai(model, chatCommand);
             case "vertexai" -> generateVertexai(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
 
-    public Flux<String> generateOpenai(String model, ImageQuery imageQuery, String messages)  {
+    public Flux<String> generateOpenai(String model, ChatCommand chatCommand)  {
         if (model.contains("dall")) {
-            String imageUrl = imageController.generateOpenaiImage(model, imageQuery);
+            String imageUrl = imageController.generateOpenaiImage(model, chatCommand);
             return Flux.just(MarkdownUtil.wrapImage("image", imageUrl));
         }
         StreamingChatLanguageModel streamingChatLanguageModel = OpenAiStreamingChatModel.builder()
@@ -52,27 +52,27 @@ public class ChatController {
                 .temperature(0.0)
                 .build();
 
-        return generateResponse(messages, streamingChatLanguageModel);
+        return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
-    public Flux<String> generateOllama(String model, String messages) {
+    public Flux<String> generateOllama(String model, ChatCommand chatCommand) {
         StreamingChatLanguageModel streamingChatLanguageModel = OllamaStreamingChatModel.builder()
                 .baseUrl(propertiesConfig.ollama().baseUrl())
                 .modelName(model)
                 .temperature(0.0)
                 .build();
 
-        return generateResponse(messages, streamingChatLanguageModel);
+        return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
-    public Flux<String> generateVertexai(String model, String messages) {
+    public Flux<String> generateVertexai(String model, ChatCommand chatCommand) {
         StreamingChatLanguageModel streamingChatLanguageModel = VertexAiGeminiStreamingChatModel.builder()
                 .project(propertiesConfig.vertexai().projectName())
                 .location(propertiesConfig.vertexai().location())
                 .modelName(model)
                 .build();
 
-        return generateResponse(messages, streamingChatLanguageModel);
+        return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
     @NotNull

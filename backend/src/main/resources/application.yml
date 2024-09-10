@@ -14,3 +14,8 @@ ai.versum:
     apiKey: api_test_1234
     projectName: test_project
     location: europe-central2
+  default-options:
+    # Only ['256x256', '512x512', '1024x1024', '1024x1792', '1792x1024']
+    # When using DALL·E 3, images can have a size of 1024x1024, 1024x1792 or 1792x1024 pixels.
+    image-size: 1024x1024
+    image-style: vivid

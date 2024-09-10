@@ -1,10 +1,10 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
-import aiversum.backend.rest.dto.VertexaiModelResponse;
 import aiversum.backend.rest.dto.Model;
 import aiversum.backend.rest.dto.OllamaModelResponse;
 import aiversum.backend.rest.dto.OpenAiModelResponse;
+import aiversum.backend.rest.dto.VertexaiModelResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
@@ -57,6 +57,7 @@ public class ModelController {
                 .bodyToMono(OpenAiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.data()))
                 .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
+                .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
     private Publisher<Model> fetchVertexaiModels(){
@@ -67,7 +68,7 @@ public class ModelController {
                 .bodyToMono(VertexaiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
                 .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "vertexai"))
-                .doOnError(error -> error.printStackTrace())
+                .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
 
     }
