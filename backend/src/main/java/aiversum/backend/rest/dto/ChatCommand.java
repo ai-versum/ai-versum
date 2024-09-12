@@ -2,12 +2,11 @@ package aiversum.backend.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ChatCommand(
-    List<Message> messages,
-    String model,
-    boolean stream
+    String messages,
+    Map<String, String> options
 ) {
 }
