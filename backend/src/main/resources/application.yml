@@ -2,6 +2,9 @@ spring:
   config:
     import: "classpath:spring.datasource.yml"
 
+  application:
+    name: backend
+
 ai.versum:
   ollama:
     enabled: true
