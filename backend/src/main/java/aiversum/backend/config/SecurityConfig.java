@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers( "/test/hello",  "/api/auth/check-session").permitAll()
+                        .requestMatchers( "/test/hello",  "/api/auth/check-session", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(fl -> fl

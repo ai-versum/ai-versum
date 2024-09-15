@@ -1,14 +1,14 @@
 spring:
-  application:
-    name: backend
+  config:
+    import: "classpath:spring.datasource.yml"
 
 ai.versum:
   ollama:
-    enabled: true
+    enabled: false
     baseUrl: http://localhost:11434
   openai:
     enabled: true
-    apiKey: test
+    apiKey: sk-proj-Jb7MK4FG7ysOrSpR0n0uT3BlbkFJGrz5xEJDkuiPDk6TEXTR
   vertexai:
     enabled: false
     apiKey: api_test_1234
