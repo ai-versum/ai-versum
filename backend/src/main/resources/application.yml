@@ -4,11 +4,11 @@ spring:
 
 ai.versum:
   ollama:
-    enabled: false
+    enabled: true
     baseUrl: http://localhost:11434
   openai:
     enabled: true
-    apiKey: sk-proj-Jb7MK4FG7ysOrSpR0n0uT3BlbkFJGrz5xEJDkuiPDk6TEXTR
+    apiKey: test
   vertexai:
     enabled: false
     apiKey: api_test_1234
