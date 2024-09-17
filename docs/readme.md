@@ -41,3 +41,13 @@ ai.versum:
     # Setting proper location for Gemini models. Gemini is served from different regions
     location: your-location
 ```
+### Default Options
+Options can be overriden on request. The default used by the application:
+```yml
+ai.versum:
+  default-options:
+    # Only ['256x256', '512x512', '1024x1024', '1024x1792', '1792x1024']
+    # When using DALL·E 3, images can have a size of 1024x1024, 1024x1792 or 1792x1024 pixels.
+    image-size: 1024x1024
+    image-style: vivid
+```
