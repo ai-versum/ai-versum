@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy code button
 - Docker integration
 - Image generation
+- Basic authorization with one user
 ### Changed
 - UI migration to Daisy UI
 - Migrated from rest call to LangChain calls
