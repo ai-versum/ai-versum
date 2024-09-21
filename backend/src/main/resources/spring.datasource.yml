@@ -6,6 +6,8 @@ spring:
     driverClassName: org.h2.Driver
     platform: h2
   jpa:
+    hibernate:
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
   h2:

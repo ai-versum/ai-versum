@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers( "/test/hello",  "/api/auth/check-session", "/h2-console/**").permitAll()
+                        .requestMatchers( "/test/hello", "/user/**","/api/auth/check-session", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(fl -> fl
