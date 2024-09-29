@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - tbd
 
 ### Added
+- H2 Database
+- User authorization
 ### Changed
 ### Removed
 ### Fixed
