@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: "classpath:spring.datasource.yml"
+
   application:
     name: backend
 
@@ -8,7 +11,7 @@ ai.versum:
     baseUrl: http://localhost:11434
   openai:
     enabled: true
-    apiKey: test
+    apiKey: ${api-key-openai}
   vertexai:
     enabled: false
     apiKey: api_test_1234
