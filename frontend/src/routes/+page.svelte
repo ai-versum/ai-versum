@@ -9,6 +9,8 @@
 	import { isAuthenticated } from '../lib/stores/auth';
 	import Login from '$lib/components/Login.svelte';
 	import { onMount } from 'svelte';
+	import {Icon} from "@smui/common";
+	import Settings from "$lib/components/Settings.svelte";
 
 	let loading = true;
 	onMount(async () => {
@@ -23,13 +25,20 @@
 			.catch(() => isAuthenticated.set(false))
 			.finally(() => loading = false);
 	});
+	let settingsDialog
 
 </script>
 
 <TailwindCss />
 {#if $isAuthenticated}
+	<dialog open bind:this={settingsDialog} class="modal">
+		<Settings />
+	</dialog>
 	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
-		<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+		<div class="flex justify-between">
+			<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+			<Icon class="material-icons my-auto text-3xl" on:click={() => settingsDialog.showModal()}>settings</Icon>
+		</div>
 
 		<div class="flex-grow overflow-y-auto max-w-[64rem]">
 			<ChatContent />

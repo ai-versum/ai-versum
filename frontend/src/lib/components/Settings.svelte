@@ -1,24 +1,28 @@
 <script>
-let imageSize
-let imageStyle
-
+ async function saveSettings(event) {
+	 console.log('event', event.target.elements['imageSize'].value);
+ }
 </script>
 
 <div class="modal-box">
-    <h3 class="font-bold text-lg">Settings</h3>
-    <p class="py-4">Press ESC key or click the button below to close</p>
-    <div class="modal-action">
-        <form method="dialog">
-            <input id="imageSize" name="imageSize" type="text"
-                   bind:value={imageSize}
-                   class="">
-            <input id="imageStyle" name="imageStyle" type="text"
-                   bind:value={imageStyle}
-                   class="">
-            <div class="tooltip" data-tip="Close dialog (Esc)">
-                <button class="btn">Close</button>
-            </div>
-            <button class="btn-primary btn">Save</button>
-        </form>
-    </div>
+	<h3 class="font-bold text-lg mb-6">Settings</h3>
+
+	<form method="dialog" class="flex flex-col gap-4" on:submit|preventDefault={saveSettings}>
+
+		<label class="input input-bordered flex items-center">
+			<input name="imageSize" type="text" class="grow" placeholder="Image size: 1024x1024" />
+		</label>
+		<label class="input input-bordered flex items-center">
+			<input name="imageStyle" type="text" class="grow" placeholder="Image style: vivid" />
+		</label>
+
+		<div class="modal-action">
+			<div class="tooltip" data-tip="Close dialog (Esc)">
+				<button class="btn">Close</button>
+			</div>
+			<button class="btn-primary btn" type="submit">Save</button>
+		</div>
+
+	</form>
+
 </div>
