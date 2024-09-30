@@ -1,6 +1,5 @@
 package aiversum.backend.rest;
 
-import aiversum.backend.exception.DuplicateEmailException;
 import aiversum.backend.model.User;
 import aiversum.backend.service.UserService;
 import org.springframework.http.HttpStatus;
