@@ -19,11 +19,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            User registeredUser = userService.save(user);
-            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
-        } catch (DuplicateEmailException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        User registeredUser = userService.save(user);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }
