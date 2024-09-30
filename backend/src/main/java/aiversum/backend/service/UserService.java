@@ -1,9 +1,9 @@
 package aiversum.backend.service;
 
+import aiversum.backend.exception.DuplicateEmailException;
 import aiversum.backend.model.User;
 import aiversum.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     public User save(User user) {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser.isPresent()) {
-            throw new DataIntegrityViolationException("User with email: " + user.getEmail() + " already exists.");
+            throw new DuplicateEmailException("User with email: " + user.getEmail() + " already exists.");
         }
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());

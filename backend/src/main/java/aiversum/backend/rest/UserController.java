@@ -1,8 +1,8 @@
 package aiversum.backend.rest;
 
+import aiversum.backend.exception.DuplicateEmailException;
 import aiversum.backend.model.User;
 import aiversum.backend.service.UserService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +22,8 @@ public class UserController {
         try {
             User registeredUser = userService.save(user);
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("User with email: " + user.getEmail() + " already exists.");
+        } catch (DuplicateEmailException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 }
