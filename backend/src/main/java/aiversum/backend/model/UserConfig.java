@@ -16,16 +16,19 @@ public class UserConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userConfigId;
+    private Long id;
 
     @Column
-    private String paramKey;
+    private String email;
 
     @Column
-    private String paramValue;
+    private String imageSize;
 
     @Column
-    private String text;
+    private String imageStyle;
+
+    @Column
+    private String apiKey;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
