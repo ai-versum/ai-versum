@@ -2,7 +2,7 @@
 
 ## Configuration
 ### Ollama
-To be able to interact with Ollama models it's required to setup and run Ollama locally. Follow instructions on https://github.com/ollama/ollama, or use docker command: `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`.
+To be able to interact with Ollama models it's required to setup and run Ollama locally. Follow instructions on [https://github.com/ollama/ollama](https://github.com/ollama/ollama), or use docker command: `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`.
 
 There are available two configuration variables with default values as follow:
 ```yml
@@ -14,7 +14,7 @@ ai.versum:
     baseUrl: http://localhost:11434
 ```
 ### OpenAI
-To be able to interact with OpenAI models, such as ChatGPT it's required to setup Project API Key on https://platform.openai.com/api-keys. The API key will be used to interact with openai API.
+To be able to interact with OpenAI models, such as ChatGPT it's required to setup Project API Key on [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys). The API key will be used to interact with openai API.
 
 There are available two configuration variables with default values as follow:
 ```yml
@@ -26,7 +26,7 @@ ai.versum:
     apiKey: sk_test_1234567890
 ```
 ### VertexAI for Gemini
-To be able to interact with Gemini models it's required to setup Project API Key by creating a new project and inclusion of API services (VertexAI API) on https://console.cloud.google.com to interact with Gemini API.
+To be able to interact with Gemini models it's required to setup Project API Key by creating a new project and inclusion of API services (VertexAI API) on [https://console.cloud.google.com](https://console.cloud.google.com) to interact with Gemini API.
 
 There are available four configuration variables with default values as follow:
 ```yml
