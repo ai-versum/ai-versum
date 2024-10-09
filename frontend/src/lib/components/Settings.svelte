@@ -3,25 +3,11 @@
 
 	export let onclose;
 
-	const mockSettings = {
-		'imageSize': '1024x1024',
-		'imageStyle': 'vivid',
-		'openAiApiKey': 'sk-proj-xxxx'
-	};
-
-	function loadSettings() {
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(mockSettings);
-			}, 1000); // simulate network latency
-		});
-	}
-
 	let config = [];
 
-	loadSettings()
-		.then(settings => {
-			config = settings;
+	fetch('api/config')
+		.then(async settings => {
+			config = await settings.json();
 		})
 		.catch(error => {
 			console.log(error);
@@ -33,17 +19,23 @@
 		// Capitalize the first letter of the sentence
 		return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 	}
+
+	function saveConfig() {
+		return ({ update }) => {
+			update().then(() => onclose())
+		};
+	}
 </script>
 
 <div class="modal-box resize">
 	<h3 class="font-bold text-lg mb-6">Settings</h3>
 
-	<form method="post" action="/api/settings" class="flex flex-col gap-4" use:enhance>
+	<form class="flex flex-col gap-4" method="POST" action="/api/config" use:enhance={saveConfig}>
 
 		{#each Object.entries(config) as [key, value]}
 			<label class="input input-bordered flex items-center">
 				{camelCaseToSentence(key)}:
-				<input name={key} type="text" class="grow ml-2" placeholder="{value}" />
+				<input name={key} type="text" class="grow ml-2" value="{value}" />
 			</label>
 		{/each}
 
