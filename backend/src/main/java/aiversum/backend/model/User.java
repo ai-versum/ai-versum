@@ -16,7 +16,10 @@ import java.util.List;
 @Setter
 public class User implements UserDetails {
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
