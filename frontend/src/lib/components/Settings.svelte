@@ -1,5 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { settingsStore} from '$lib/stores/SettingsStore.js';
 
 	export let onclose;
 
@@ -8,6 +9,7 @@
 	fetch('api/config')
 		.then(async settings => {
 			config = await settings.json();
+			settingsStore.set(config);
 		})
 		.catch(error => {
 			console.log(error);
