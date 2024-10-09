@@ -2,6 +2,8 @@ package aiversum.backend.rest;
 
 import aiversum.backend.model.UserConfig;
 import aiversum.backend.service.UserConfigService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,14 +17,10 @@ public class UserConfigController {
     }
 
     @GetMapping("/{email}")
-    public UserConfig getUserConfig(@PathVariable String email){
+    public UserConfig getUserConfig(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         return userConfigService.getConfigByEmail(email);
-    }
-
-    @PostMapping("/{email}")
-    public UserConfig updateUserConfig(@RequestBody UserConfig config){
-        String email = userConfigService.getCurrentEmail();
-        return userConfigService.updateConfig(email, config);
     }
 
 }

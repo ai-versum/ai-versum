@@ -19,9 +19,6 @@ public class UserConfig {
     private Long id;
 
     @Column
-    private String email;
-
-    @Column
     private String imageSize;
 
     @Column
@@ -30,7 +27,7 @@ public class UserConfig {
     @Column
     private String apiKey;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 }
