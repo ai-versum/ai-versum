@@ -21,11 +21,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
 //                Only for h2 console
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests((requests) -> requests
+                .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/test/hello", "/user/**", "/api/auth/check-session", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -38,10 +38,6 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.getWriter().write("{'status':'error'}");
                         }))
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login");
-
-        return http.build();
+                .build();
     }
 }

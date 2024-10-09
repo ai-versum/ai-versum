@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "UserConfig")
+@Table(name = "userConfigs")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,7 +15,6 @@ import lombok.Setter;
 public class UserConfig {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -26,8 +25,4 @@ public class UserConfig {
 
     @Column
     private String apiKey;
-
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
 }

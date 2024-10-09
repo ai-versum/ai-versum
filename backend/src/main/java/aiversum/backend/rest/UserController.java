@@ -22,7 +22,7 @@ public class UserController {
         try {
             User registeredUser = userService.save(user);
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body("User with email: " + user.getEmail() + " already exists.");
