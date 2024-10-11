@@ -1,6 +1,9 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.model.UserConfig;
+import aiversum.backend.rest.dto.UserConfigDto;
+import aiversum.backend.rest.mapper.UserConfigMapper;
+import aiversum.backend.rest.mapper.UserConfigMapperImpl;
 import aiversum.backend.service.UserConfigService;
 import aiversum.backend.service.UserContextService;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +13,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/config")
 public class UserConfigController {
-
-    private final UserConfigService userConfigService;
     private final UserContextService userContextService;
+    private final UserConfigService userConfigService;
+    private final UserConfigMapper userConfigMapper = new UserConfigMapperImpl();
 
     public UserConfigController(UserConfigService userConfigService,
                                 UserContextService userContextService) {
@@ -21,15 +24,17 @@ public class UserConfigController {
     }
 
     @GetMapping
-    public Optional<UserConfig> getUserConfig(){
+    public Optional<UserConfigDto> getUserConfig() {
         var authorizedUser = userContextService.getAuthorizedUser();
-        return userConfigService.getConfigByEmail(authorizedUser.getId());
+        Optional<UserConfig> configByEmail = userConfigService.getConfigByEmail(authorizedUser.getId());
+        return configByEmail.map(userConfigMapper::toDto);
     }
 
     @PostMapping
-    public UserConfig updateUserConfig(@RequestBody UserConfig userConfig){
+    public UserConfigDto updateUserConfig(@ModelAttribute UserConfig userConfig) {
         var authorizedUser = userContextService.getAuthorizedUser();
-        return userConfigService.updateConfig(authorizedUser, userConfig);
+        UserConfig updatedUserConfig = userConfigService.updateConfig(authorizedUser, userConfig);
+        return userConfigMapper.toDto(updatedUserConfig);
     }
 
 }
