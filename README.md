@@ -8,6 +8,7 @@ The repository will contain both frontend and backend.
 * 🤖 OpenAI support for chat streaming and model listing
 * 🤖 Ollama support for chat streaming and model listing
 * 🤖 Vertex AI and Gemini support for chat streaming and model listing
+* 🖼️ Image generation through Dall-e
 * 💻 Code Syntax Highlighting: Enjoy enhanced code readability with our syntax highlighting feature.
 
 ## Documentation

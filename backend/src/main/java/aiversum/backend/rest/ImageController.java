@@ -1,7 +1,7 @@
 package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
-import aiversum.backend.rest.dto.ImageQuery;
+import aiversum.backend.rest.dto.ChatCommand;
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.openai.OpenAiImageModel;
@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/image/")
@@ -24,18 +27,22 @@ public class ImageController {
 
 
     @PostMapping(value = "/openai/{model}", produces = "application/json")
-    public String generateOpenaiImage(@PathVariable String model, @RequestBody ImageQuery imageQuery) {
-        // I have removed the method which retrieves data, but output is:
-        // Cannot deserialize value of type ImageQuery from Array value (token 'JsonToken.Start_Array')
+    public String generateOpenaiImage(@PathVariable String model, @RequestBody ChatCommand chatCommand)  {
 
+        Optional<Map<String, String>> options = Optional.ofNullable(chatCommand.options());
+        String imageSize = options
+                .map(it -> it.getOrDefault("size", propertiesConfig.defaultOptions().imageSize()))
+                .orElse(propertiesConfig.defaultOptions().imageSize());
+        String imageStyle = options
+                .map(it -> it.getOrDefault("style", propertiesConfig.defaultOptions().imageStyle()))
+                .orElse(propertiesConfig.defaultOptions().imageStyle());
         ImageModel imageModel = OpenAiImageModel.builder()
                 .apiKey(propertiesConfig.openai().apiKey())
                 .modelName(model)
-                .size(imageQuery.options().sizeOfImage())
-                .style(imageQuery.options().styleOfImage())
+                .size(imageSize)
+                .style(imageStyle)
                 .build();
-
-        Response<Image> response = imageModel.generate(imageQuery.query());
+        Response<Image> response = imageModel.generate(chatCommand.messages());
         return response.content().url().toString();
     }
 
