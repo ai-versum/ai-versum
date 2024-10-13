@@ -1,12 +1,12 @@
 <script>
-	import { isAuthenticated, user } from '$lib/stores/auth.js';
+	import { user } from '$lib/stores/auth.js';
+	import { goto } from '$app/navigation';
 
-	let register = false;
 	let email = '';
 	let password = '';
 
-	async function loginOrRegister() {
-		const response = await fetch('api/user/register', {
+	async function login() {
+		const response = await fetch('login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -19,8 +19,8 @@
 		console.log('Response:', responseBody);
 
 		if (response.ok) {
-			isAuthenticated.set(true);
 			user.set({ email }); // Set the logged-in user
+			await goto("/")
 		} else {
 			// Handle login error
 			console.error('Login failed:', responseBody);
@@ -31,12 +31,12 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
 		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-			Create account
+			Sign in to your account
 		</h2>
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-		<form class="space-y-6 mb-3" on:submit|preventDefault={loginOrRegister}>
+		<form class="space-y-6 mb-3" on:submit|preventDefault={login}>
 			<div>
 				<label for="email" class="block text-sm font-medium leading-6 ">Email</label>
 				<div class="mt-2">
@@ -62,15 +62,12 @@
 			<div>
 				<button type="submit"
 								class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-					Sign up
+					Sign in
 				</button>
 			</div>
 		</form>
-<!--		<button class="btn btn-link pl-0" on:click={() => register = !register}>-->
-<!--			Already registered? Sign in here!-->
-<!--		</button>-->
-		<a class="link link-primary" href="/login">
-			Already registered? Sign in here!
+		<a class="link link-primary" href="/register">
+			Don't have an account? Create one here!
 		</a>
 	</div>
 </div>

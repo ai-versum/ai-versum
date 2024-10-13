@@ -1,12 +1,12 @@
 <script>
-	import { isAuthenticated, user } from '$lib/stores/auth.js';
+	import { user } from '$lib/stores/auth.js';
+	import { goto } from '$app/navigation';
 
-	let register = false;
 	let email = '';
 	let password = '';
 
 	async function loginOrRegister() {
-		const response = await fetch(register ? 'api/user/register' : 'login', {
+		const response = await fetch('api/user/register', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -19,11 +19,11 @@
 		console.log('Response:', responseBody);
 
 		if (response.ok) {
-			isAuthenticated.set(true);
 			user.set({ email }); // Set the logged-in user
+			await goto("/login")
 		} else {
 			// Handle login error
-			console.error('Login failed:', responseBody);
+			console.error('Register failed:', responseBody);
 		}
 	}
 </script>
@@ -31,12 +31,12 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
 		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-			{#if register}Create account{:else}Sign in to your account{/if}
+			Create account
 		</h2>
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-		<form class="space-y-6" on:submit|preventDefault={loginOrRegister}>
+		<form class="space-y-6 mb-3" on:submit|preventDefault={loginOrRegister}>
 			<div>
 				<label for="email" class="block text-sm font-medium leading-6 ">Email</label>
 				<div class="mt-2">
@@ -62,12 +62,15 @@
 			<div>
 				<button type="submit"
 								class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-					{#if register}Sign up{:else}Sign in{/if}
+					Sign up
 				</button>
 			</div>
 		</form>
-		<button class="btn btn-link pl-0" on:click={() => register = !register}>
-			{#if register}Already registered? Sign in here!{:else}Don't have an account? Create one here!{/if}
-		</button>
+<!--		<button class="btn btn-link pl-0" on:click={() => register = !register}>-->
+<!--			Already registered? Sign in here!-->
+<!--		</button>-->
+		<a class="link link-primary" href="/login">
+			Already registered? Sign in here!
+		</a>
 	</div>
 </div>
