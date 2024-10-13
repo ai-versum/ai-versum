@@ -4,8 +4,10 @@
 
 	let email = '';
 	let password = '';
+	let error = '';
 
 	async function loginOrRegister() {
+		error = '';
 		const response = await fetch('api/user/register', {
 			method: 'POST',
 			headers: {
@@ -20,8 +22,9 @@
 
 		if (response.ok) {
 			user.set({ email }); // Set the logged-in user
-			await goto("/login")
+			await goto('/login');
 		} else {
+			error = 'Error during account creation. Try again.';
 			// Handle login error
 			console.error('Register failed:', responseBody);
 		}
@@ -36,7 +39,21 @@
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-		<form class="space-y-6 mb-3" on:submit|preventDefault={loginOrRegister}>
+		<div role="alert" class="alert alert-error {error ? 'opacity-100' : 'opacity-0'}">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6 shrink-0 stroke-current"
+				fill="none"
+				viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+			</svg>
+			<span>{error}</span>
+		</div>
+		<form class="space-y-6 mb-3 mt-3" on:submit|preventDefault={loginOrRegister}>
 			<div>
 				<label for="email" class="block text-sm font-medium leading-6 ">Email</label>
 				<div class="mt-2">
@@ -66,9 +83,6 @@
 				</button>
 			</div>
 		</form>
-<!--		<button class="btn btn-link pl-0" on:click={() => register = !register}>-->
-<!--			Already registered? Sign in here!-->
-<!--		</button>-->
 		<a class="link link-primary" href="/login">
 			Already registered? Sign in here!
 		</a>
