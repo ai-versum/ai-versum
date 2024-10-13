@@ -26,10 +26,11 @@ public class SecurityConfig {
 //                Only for h2 console
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/test/hello", "/user/**", "/api/auth/check-session", "/h2-console/**").permitAll()
+                        .requestMatchers("/test/hello", "/api/user/**", "/api/auth/check-session", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(fl -> fl
+                        .usernameParameter("email")
                         .successHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.getWriter().write("{'status':'success'}");
