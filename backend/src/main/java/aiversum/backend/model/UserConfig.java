@@ -25,4 +25,13 @@ public class UserConfig {
 
     @Column
     private String apiKey;
+
+    @Column
+    private boolean enabled;
+
+    @Column
+    private String projectName;
+
+    @Column
+    private String location;
 }
