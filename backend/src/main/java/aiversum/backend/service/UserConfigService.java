@@ -32,6 +32,9 @@ public class UserConfigService {
         userConfig.setApiKey(newConfig.getApiKey());
         userConfig.setImageSize(newConfig.getImageSize());
         userConfig.setImageStyle(newConfig.getImageStyle());
+        userConfig.setEnabled(newConfig.isEnabled());
+        userConfig.setProjectName(newConfig.getProjectName());
+        userConfig.setLocation(newConfig.getLocation());
         return userConfigRepository.save(userConfig);
     }
 }
