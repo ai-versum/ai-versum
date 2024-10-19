@@ -1,19 +1,22 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { settingsStore} from '$lib/stores/SettingsStore.js';
+	import { settingsStore } from '$lib/stores/SettingsStore.js';
+	import { onMount } from 'svelte';
 
 	export let onclose;
 
 	let config = [];
 
-	fetch('api/config')
-		.then(async settings => {
-			config = await settings.json();
-			settingsStore.set(config);
-		})
-		.catch(error => {
-			console.log(error);
-		});
+	onMount(async () => {
+		fetch('api/config')
+			.then(async settings => {
+				config = await settings.json();
+				settingsStore.set(config);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	});
 
 	function camelCaseToSentence(camelCaseText) {
 		// Insert a space before any upper case letter and convert the string to lowercase
@@ -24,7 +27,7 @@
 
 	function saveConfig() {
 		return ({ update }) => {
-			update().then(() => onclose())
+			update().then(() => onclose());
 		};
 	}
 </script>

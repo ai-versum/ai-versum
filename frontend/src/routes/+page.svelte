@@ -1,36 +1,35 @@
 <script>
-	import TailwindCss from '../lib/TailwindCSS.svelte';
 	import MessageInput from '$lib/components/MessageInput.svelte';
 	import ModelSelect from '$lib/components/ModelSelect.svelte';
 	import ChatContent from '$lib/components/ChatContent.svelte';
 
 	let selectedModel;
 
-	import { isAuthenticated } from '../lib/stores/auth';
-	import Login from '$lib/components/Login.svelte';
 	import { onMount } from 'svelte';
 	import { Icon } from '@smui/common';
 	import Settings from '$lib/components/Settings.svelte';
+	import { goto } from '$app/navigation';
 
 	let loading = true;
 	onMount(async () => {
 		await fetch('/api/auth/check-session')
 			.then((response) => {
-				if (response.ok) {
-					isAuthenticated.set(true);
-				} else {
-					isAuthenticated.set(false);
+				if (!response.ok) {
+					goto('/login');
 				}
 			})
-			.catch(() => isAuthenticated.set(false))
+			.catch(() => goto('/login'))
 			.finally(() => loading = false);
 	});
 	let settingsDialog;
 
 </script>
 
-<TailwindCss />
-{#if $isAuthenticated}
+{#if loading}
+	<div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
+		<span class="loading loading-infinity w-[5rem]"></span>
+	</div>
+{:else}
 	<dialog bind:this={settingsDialog} class="modal">
 		<Settings onclose="{() => settingsDialog.close()}" />
 	</dialog>
@@ -46,12 +45,4 @@
 
 		<MessageInput selectedModel="{selectedModel}" />
 	</div>
-{:else}
-	{#if loading}
-		<div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
-			<span class="loading loading-infinity w-[5rem]"></span>
-		</div>
-	{:else}
-		<Login />
-	{/if}
 {/if}
