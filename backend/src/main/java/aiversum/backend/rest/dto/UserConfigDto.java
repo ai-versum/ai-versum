@@ -1,8 +1,11 @@
 package aiversum.backend.rest.dto;
 
 public record UserConfigDto(
-        OllamaConfig ollamaConfig,
-        OpenaiConfig openaiConfig,
-        VertexaiConfig vertexaiConfig
+        String imageSize,
+        String imageStyle,
+        String apiKey,
+        String enabled,
+        String projectName,
+        String location
         ) {
 }
