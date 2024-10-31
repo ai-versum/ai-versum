@@ -8,6 +8,7 @@ public record PropertiesConfig(
         OllamaProperties ollama,
         OpenaiProperties openai,
         VertexaiProperties vertexai,
+        AnthropicProperties anthropic,
         DefaultOptions defaultOptions
 ) {
 }

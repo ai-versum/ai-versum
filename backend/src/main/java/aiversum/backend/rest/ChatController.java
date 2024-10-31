@@ -6,6 +6,7 @@ import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.model.StreamingResponseHandler;
+import dev.langchain4j.model.anthropic.AnthropicStreamingChatModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
@@ -37,8 +38,19 @@ public class ChatController {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);
             case "vertexai" -> generateVertexai(model, chatCommand);
+            case "anthropic" -> generateAnthropic(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
+    }
+
+    private Flux<String> generateAnthropic(String model, ChatCommand chatCommand) {
+        StreamingChatLanguageModel streamingChatLanguageModel = AnthropicStreamingChatModel.builder()
+                .modelName(model)
+                .apiKey(propertiesConfig.anthropic().apiKey())
+                .temperature(0.0)
+                .build();
+
+        return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
     public Flux<String> generateOpenai(String model, ChatCommand chatCommand)  {

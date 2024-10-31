@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/models")
 public class ModelController {
@@ -35,10 +37,18 @@ public class ModelController {
         if (propertiesConfig.openai().enabled()) {
             models = models.mergeWith(fetchOpenAIModels());
         }
-        if (propertiesConfig.vertexai().enabled()){
+        if (propertiesConfig.vertexai().enabled()) {
             models = models.mergeWith(fetchVertexaiModels());
         }
+        if (propertiesConfig.anthropic().enabled()) {
+            models = models.mergeWith(fetchAnthropicModels());
+        }
         return models;
+    }
+
+    private Publisher<Model> fetchAnthropicModels() {
+        Model sonnet = new Model("claude-3-5-sonnet-latest", "anthropic");
+        return Flux.fromIterable(List.of(sonnet));
     }
 
     private Publisher<Model> fetchOllamaModels() {
@@ -60,10 +70,11 @@ public class ModelController {
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
-    private Publisher<Model> fetchVertexaiModels(){
+
+    private Publisher<Model> fetchVertexaiModels() {
         return webClient
                 .get().uri("https://generativelanguage.googleapis.com/v1/models?key="
-                + propertiesConfig.vertexai().apiKey())
+                        + propertiesConfig.vertexai().apiKey())
                 .retrieve()
                 .bodyToMono(VertexaiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
