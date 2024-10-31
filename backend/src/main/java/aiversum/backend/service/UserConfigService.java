@@ -1,8 +1,12 @@
 package aiversum.backend.service;
 
 import aiversum.backend.config.properties.PropertiesConfig;
+import aiversum.backend.model.User;
 import aiversum.backend.model.UserConfig;
 import aiversum.backend.repository.UserConfigRepository;
+import aiversum.backend.rest.dto.UserConfigDto;
+import aiversum.backend.rest.mapper.UserConfigMapper;
+import aiversum.backend.rest.mapper.UserConfigMapperImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +16,7 @@ public class UserConfigService {
     private final UserConfigRepository userConfigRepository;
     private final UserContextService userContextService;
     private final PropertiesConfig propertiesConfig;
+    private final UserConfigMapper userConfigMapper = new UserConfigMapperImpl();
 
     public UserConfigService(UserConfigRepository userConfigRepository,
                              UserContextService userContextService,
@@ -24,29 +29,24 @@ public class UserConfigService {
     public UserConfig getConfig() {
         var authorizedUser = userContextService.getAuthorizedUser();
         Optional<UserConfig> userConfig = userConfigRepository.findById(authorizedUser.getId());
-        if (userConfig.isPresent()) {
-            return userConfig.get();
-        } else {
-            UserConfig newUserConfig = new UserConfig();
-            newUserConfig.setId(authorizedUser.getId());
-            newUserConfig.setImageSize(propertiesConfig.defaultOptions().imageSize());
-            newUserConfig.setImageStyle(propertiesConfig.defaultOptions().imageStyle());
-            return userConfigRepository.save(newUserConfig);
-        }
+        return userConfig.orElseGet(() -> createConfig(authorizedUser));
     }
 
-    public UserConfig updateConfig(UserConfig newConfig) {
+    public UserConfig updateConfig(UserConfigDto newConfig) {
         var authorizedUser = userContextService.getAuthorizedUser();
 
-        UserConfig userConfig = userConfigRepository
-                .findById(authorizedUser.getId())
-                .orElseThrow();
-        userConfig.setApiKey(newConfig.getApiKey());
-        userConfig.setImageSize(newConfig.getImageSize());
-        userConfig.setImageStyle(newConfig.getImageStyle());
-        userConfig.setEnabled(newConfig.isEnabled());
-        userConfig.setProjectName(newConfig.getProjectName());
-        userConfig.setLocation(newConfig.getLocation());
+        UserConfig userConfig = userConfigMapper.fromDto(newConfig);
+        userConfig.setId(authorizedUser.getId());
+
         return userConfigRepository.save(userConfig);
+    }
+
+    private UserConfig createConfig(User user) {
+        UserConfig newUserConfig = new UserConfig();
+        newUserConfig.setId(user.getId());
+        newUserConfig.setImageSize(propertiesConfig.defaultOptions().imageSize());
+        newUserConfig.setImageStyle(propertiesConfig.defaultOptions().imageStyle());
+        newUserConfig.setOllamaBaseUrl("http://localhost:11434");
+        return userConfigRepository.save(newUserConfig);
     }
 }

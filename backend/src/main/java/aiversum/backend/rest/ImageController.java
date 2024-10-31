@@ -2,6 +2,7 @@ package aiversum.backend.rest;
 
 import aiversum.backend.config.properties.PropertiesConfig;
 import aiversum.backend.rest.dto.ChatCommand;
+import aiversum.backend.service.UserConfigService;
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.openai.OpenAiImageModel;
@@ -20,15 +21,17 @@ import java.util.Optional;
 public class ImageController {
 
     private final PropertiesConfig propertiesConfig;
+    private final UserConfigService userConfigService;
 
-    public ImageController(PropertiesConfig propertiesConfig) {
+    public ImageController(PropertiesConfig propertiesConfig, UserConfigService userConfigService) {
         this.propertiesConfig = propertiesConfig;
+        this.userConfigService = userConfigService;
     }
 
 
     @PostMapping(value = "/openai/{model}", produces = "application/json")
-    public String generateOpenaiImage(@PathVariable String model, @RequestBody ChatCommand chatCommand)  {
-
+    public String generateOpenaiImage(@PathVariable String model, @RequestBody ChatCommand chatCommand) {
+        var userConfig = userConfigService.getConfig();
         Optional<Map<String, String>> options = Optional.ofNullable(chatCommand.options());
         String imageSize = options
                 .map(it -> it.getOrDefault("size", propertiesConfig.defaultOptions().imageSize()))
@@ -37,7 +40,7 @@ public class ImageController {
                 .map(it -> it.getOrDefault("style", propertiesConfig.defaultOptions().imageStyle()))
                 .orElse(propertiesConfig.defaultOptions().imageStyle());
         ImageModel imageModel = OpenAiImageModel.builder()
-                .apiKey(propertiesConfig.openai().apiKey())
+                .apiKey(userConfig.getOpenaiApiKey())
                 .modelName(model)
                 .size(imageSize)
                 .style(imageStyle)

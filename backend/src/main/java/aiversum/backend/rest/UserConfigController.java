@@ -24,7 +24,7 @@ public class UserConfigController {
     }
 
     @PostMapping
-    public UserConfigDto updateUserConfig(@ModelAttribute UserConfig userConfig) {
+    public UserConfigDto updateUserConfig(UserConfigDto userConfig) {
         UserConfig updatedUserConfig = userConfigService.updateConfig(userConfig);
         return userConfigMapper.toDto(updatedUserConfig);
     }
