@@ -17,21 +17,18 @@ public class UserConfig {
     @Id
     private Long id;
 
-    @Column
-    private String imageSize;
+    private boolean ollamaEnabled;
+    private String ollamaBaseUrl;
 
-    @Column
+    private boolean openaiEnabled;
+    private String openaiApiKey;
+
+    private boolean vertexaiEnabled;
+    private String vertexaiApiKey;
+    private String vertexaiProjectName;
+    private String vertexaiLocation;
+
+    private String imageSize;
     private String imageStyle;
 
-    @Column
-    private String apiKey;
-
-    @Column
-    private boolean enabled;
-
-    @Column
-    private String projectName;
-
-    @Column
-    private String location;
 }
