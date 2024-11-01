@@ -5,25 +5,19 @@
 
 	export let onclose;
 
-	let config = [];
+	let config = {};
 
 	onMount(async () => {
 		fetch('api/config')
 			.then(async settings => {
 				config = await settings.json();
+				console.log(config);
 				settingsStore.set(config);
 			})
 			.catch(error => {
 				console.log(error);
 			});
 	});
-
-	function camelCaseToSentence(camelCaseText) {
-		// Insert a space before any upper case letter and convert the string to lowercase
-		const sentence = camelCaseText.replace(/([A-Z])/g, ' $1').toLowerCase();
-		// Capitalize the first letter of the sentence
-		return sentence.charAt(0).toUpperCase() + sentence.slice(1);
-	}
 
 	function saveConfig() {
 		return ({ update }) => {
@@ -37,13 +31,138 @@
 
 	<form class="flex flex-col gap-4" method="POST" action="/api/config" use:enhance={saveConfig}>
 
-		{#each Object.entries(config) as [key, value]}
-			<label class="input input-bordered flex items-center">
-				{camelCaseToSentence(key)}:
-				<input name={key} type="text" class="grow ml-2" value="{value}" />
-			</label>
-		{/each}
+		<!-- Ollama Section -->
+		<div class="form-control gap-4">
+			<h3 class="text-lg font-medium">Ollama Settings</h3>
 
+			<label class="label cursor-pointer">
+				<span class="label-text">Enable Ollama</span>
+				<input
+					type="checkbox"
+					class="toggle toggle-primary"
+					bind:checked={config.ollamaEnabled}
+					name="ollamaEnabled"
+				/>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">Base URL</span>
+				<input
+					type="text"
+					class="input input-bordered w-full"
+					placeholder="http://localhost:11434"
+					bind:value={config.ollamaBaseUrl}
+					name="ollamaBaseUrl"
+				/>
+			</label>
+			<div class="divider"></div>
+		</div>
+
+		<!-- OpenAI Section -->
+		<div class="form-control gap-4">
+			<h3 class="text-lg font-medium">OpenAI Settings</h3>
+
+			<label class="label cursor-pointer">
+				<span class="label-text">Enable OpenAI</span>
+				<input
+					type="checkbox"
+					class="toggle toggle-primary"
+					bind:checked={config.openaiEnabled}
+					name="openaiEnabled"
+				/>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">API Key</span>
+				<input
+					type="password"
+					class="input input-bordered w-full"
+					placeholder="Enter your OpenAI API key"
+					bind:value={config.openaiApiKey}
+					name="openaiApiKey"
+				/>
+			</label>
+			<div class="divider"></div>
+		</div>
+
+		<!-- Vertex AI Section -->
+		<div class="form-control gap-4">
+			<h3 class="text-lg font-medium">Vertex AI Settings</h3>
+
+			<label class="label cursor-pointer">
+				<span class="label-text">Enable Vertex AI</span>
+				<input
+					type="checkbox"
+					class="toggle toggle-primary"
+					bind:checked={config.vertexaiEnabled}
+					name="vertexaiEnabled"
+				/>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">API Key</span>
+				<input
+					type="password"
+					class="input input-bordered w-full"
+					placeholder="Enter your Vertex AI API key"
+					bind:value={config.vertexaiApiKey}
+					name="vertexaiApiKey"
+				/>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">Project Name</span>
+				<input
+					type="text"
+					class="input input-bordered w-full"
+					placeholder="Enter project name"
+					bind:value={config.vertexaiProjectName}
+					name="vertexaiProjectName"
+				/>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">Location</span>
+				<input
+					type="text"
+					class="input input-bordered w-full"
+					placeholder="Enter location"
+					bind:value={config.vertexaiLocation}
+					name="vertexaiLocation"
+				/>
+			</label>
+			<div class="divider"></div>
+		</div>
+
+		<!-- Image Generation Settings -->
+		<div class="form-control gap-4">
+			<h3 class="text-lg font-medium">Image Generation Settings</h3>
+
+			<label class="form-control">
+				<span class="label-text">Image Size</span>
+				<select
+					class="select select-bordered w-full"
+					bind:value={config.imageSize}
+					name="imageSize"
+				>
+					<option value="256x256">256x256</option>
+					<option value="512x512">512x512</option>
+					<option value="1024x1024">1024x1024</option>
+				</select>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">Image Style</span>
+				<select
+					class="select select-bordered w-full"
+					bind:value={config.imageStyle}
+					name="imageStyle"
+				>
+					<option value="vivid">Vivid</option>
+					<option value="natural">Natural</option>
+				</select>
+			</label>
+		</div>
 		<div class="modal-action">
 			<div class="tooltip" data-tip="Close dialog (Esc)">
 				<button class="btn" on:click|preventDefault="{() => onclose()}">Close</button>
