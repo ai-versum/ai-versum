@@ -8,4 +8,5 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserConfigMapper {
     UserConfigDto toDto(UserConfig userConfig);
+    UserConfig fromDto(UserConfigDto userConfigDto);
 }
