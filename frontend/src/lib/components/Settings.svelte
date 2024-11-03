@@ -1,5 +1,4 @@
 <script>
-	import { enhance } from '$app/forms';
 	import { settingsStore } from '$lib/stores/SettingsStore.js';
 	import { onMount } from 'svelte';
 
@@ -19,17 +18,34 @@
 			});
 	});
 
-	function saveConfig() {
-		return ({ update }) => {
-			update().then(() => onclose());
-		};
-	}
+	const handleSubmit = (e) => {
+		const formData = new FormData(e.target);
+
+		// Set explicit false values for unchecked checkboxes
+		if (!config.ollamaEnabled) formData.set('ollamaEnabled', 'false');
+		if (!config.openaiEnabled) formData.set('openaiEnabled', 'false');
+		if (!config.vertexaiEnabled) formData.set('vertexaiEnabled', 'false');
+
+		fetch('/api/config', {
+			method: 'POST',
+			body: formData
+		})
+			.then(response => response.json())
+			.then(data => {
+				console.log('Success:', data);
+				settingsStore.set(data);
+				onclose();
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	};
 </script>
 
 <div class="modal-box resize">
 	<h3 class="font-bold text-lg mb-6">Settings</h3>
 
-	<form class="flex flex-col gap-4" method="POST" action="/api/config" use:enhance={saveConfig}>
+	<form class="flex flex-col gap-4" on:submit={handleSubmit}>
 
 		<!-- Ollama Section -->
 		<div class="form-control gap-4">
