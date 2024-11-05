@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - H2 Database
 - User authorization
 ### Changed
+- Updated frontend dependencies
 ### Removed
 ### Fixed
 ### Deprecated
