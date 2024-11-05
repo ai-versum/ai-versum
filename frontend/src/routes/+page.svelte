@@ -34,14 +34,19 @@
 	<dialog bind:this={settingsDialog} class="modal">
 		<Settings onclose="{() => settingsDialog.close()}" />
 	</dialog>
-	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
-		<div class="flex justify-between">
-			<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
-			<div class="flex gap-1">
-				<ThemeSwap />
-				<Icon class="material-icons my-auto text-3xl cursor-pointer" on:click={() => settingsDialog.showModal()}>settings</Icon>
-			</div>
+	<div class="navbar bg-base-100">
+		<div class="navbar-start">
+			<a class="btn btn-ghost text-xl"><img width="30" src="./favicon.png">AI-Versum</a>
 		</div>
+		<div class="navbar-center">
+			<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
+		</div>
+		<div class="navbar-end gap-1">
+			<ThemeSwap />
+			<Icon class="material-icons my-auto text-3xl cursor-pointer" on:click={() => settingsDialog.showModal()}>settings</Icon>
+		</div>
+	</div>
+	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
 
 		<div class="flex-grow overflow-y-auto max-w-[64rem]">
 			<ChatContent />
