@@ -46,12 +46,14 @@
 			<Icon class="material-icons my-auto text-3xl cursor-pointer" on:click={() => settingsDialog.showModal()}>settings</Icon>
 		</div>
 	</div>
-	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
+	<div class="flex flex-col p-3 md:max-w-3xl m-auto ">
 
-		<div class="flex-grow overflow-y-auto max-w-[64rem]">
+		<div class="flex-grow overflow-y-auto max-w-[64rem] mb-10">
 			<ChatContent />
 		</div>
 
-		<MessageInput selectedModel="{selectedModel}" />
+		<div class="fixed bottom-1 w-[47rem]">
+			<MessageInput selectedModel="{selectedModel}" />
+		</div>
 	</div>
 {/if}
