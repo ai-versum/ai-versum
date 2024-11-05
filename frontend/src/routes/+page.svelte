@@ -9,6 +9,7 @@
 	import { Icon } from '@smui/common';
 	import Settings from '$lib/components/Settings.svelte';
 	import { goto } from '$app/navigation';
+	import ThemeSwap from '$lib/components/ThemeSwap.svelte';
 
 	let loading = true;
 	onMount(async () => {
@@ -36,7 +37,10 @@
 	<div class="flex flex-col h-screen p-3 md:max-w-3xl m-auto ">
 		<div class="flex justify-between">
 			<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
-			<Icon class="material-icons my-auto text-3xl" on:click={() => settingsDialog.showModal()}>settings</Icon>
+			<div class="flex gap-1">
+				<ThemeSwap />
+				<Icon class="material-icons my-auto text-3xl cursor-pointer" on:click={() => settingsDialog.showModal()}>settings</Icon>
+			</div>
 		</div>
 
 		<div class="flex-grow overflow-y-auto max-w-[64rem]">
