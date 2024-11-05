@@ -36,7 +36,7 @@
 	</dialog>
 	<div class="navbar bg-base-100">
 		<div class="navbar-start">
-			<a class="btn btn-ghost text-xl"><img width="30" src="./favicon.png">AI-Versum</a>
+			<a class="btn btn-ghost text-xl"><img alt="logo" width="30" src="./favicon.png">AI-Versum</a>
 		</div>
 		<div class="navbar-center">
 			<ModelSelect on:modelChange={(e) => { selectedModel = e.detail; }} />
