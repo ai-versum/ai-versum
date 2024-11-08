@@ -1,7 +1,7 @@
 <script>
 	import { Icon } from '@smui/common';
 
-	let lightTheme = localStorage.getItem('theme') === 'light';
+	let lightTheme = localStorage.getItem('theme') !== 'dark';
 
 	function handleThemeChange() {
 		let themeToSet = lightTheme ? 'light' : 'dark';
