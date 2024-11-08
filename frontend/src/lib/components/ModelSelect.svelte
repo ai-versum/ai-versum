@@ -8,14 +8,23 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		fetchModels().then(fetchedModels => {
-			models = fetchedModels;
-		});
+		models = await fetchModels();
+
+		const modelString = localStorage.getItem('aiversum.model');
+		if (modelString) {
+			const model = JSON.parse(modelString);
+			const modelExists = models.some(it => it.id === model.id);
+			if (modelExists) {
+				selectedModel = model.id;
+				dispatch('modelChange', model);
+			}
+		}
 	});
 
 	function handleModelChange(event) {
-		selectedModel = event.target.value;
-		dispatch('modelChange', models.find(it => it.id === selectedModel));
+		let model = models.find(it => it.id === event.target.value);
+		localStorage.setItem('aiversum.model', JSON.stringify(model));
+		dispatch('modelChange', model);
 	}
 
 	function groupModelsByProvider(models) {
