@@ -42,7 +42,7 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(OllamaModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
-                .map(ollamaModel -> new Model(ollamaModel.name(), "Ollama"))
+                .map(ollamaModel -> new Model(ollamaModel.name(), "ollama"))
                 .onErrorResume(e -> Flux.empty());
     }
 
@@ -52,7 +52,7 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(OpenAiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.data()))
-                .map(ollamaModel -> new Model(ollamaModel.id(), "Open AI:"))
+                .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
@@ -62,13 +62,13 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(VertexaiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
-                .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "Vertex AI"))
+                .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "vertexai"))
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
 
     }
     private Publisher<Model> fetchAnthropicModels(){
-        Model sonnet = new Model("claude-3-5-sonnet-latest", "Anthropic:");
+        Model sonnet = new Model("claude-3-5-sonnet-20241022", "anthropic");
         return Flux.fromIterable(List.of(sonnet));
     }
 }
