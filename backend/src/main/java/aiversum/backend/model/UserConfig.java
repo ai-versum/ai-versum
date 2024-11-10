@@ -28,6 +28,9 @@ public class UserConfig {
     private String vertexaiProjectName;
     private String vertexaiLocation;
 
+    private boolean anthropicEnabled;
+    private String anthropicApiKey;
+
     private String imageSize;
     private String imageStyle;
 

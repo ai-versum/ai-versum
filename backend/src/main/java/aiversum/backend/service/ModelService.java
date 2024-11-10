@@ -1,14 +1,13 @@
 package aiversum.backend.service;
 
-import aiversum.backend.rest.dto.Model;
-import aiversum.backend.rest.dto.OllamaModelResponse;
-import aiversum.backend.rest.dto.OpenAiModelResponse;
-import aiversum.backend.rest.dto.VertexaiModelResponse;
+import aiversum.backend.rest.dto.*;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Service
 public class ModelService {
@@ -32,6 +31,9 @@ public class ModelService {
         if (userConfig.isVertexaiEnabled()){
             models = models.mergeWith(fetchVertexaiModels(userConfig.getVertexaiApiKey()));
         }
+        if(userConfig.isAnthropicEnabled()){
+            models = models.mergeWith(fetchAnthropicModels());
+        }
         return models;
     }
 
@@ -40,7 +42,7 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(OllamaModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
-                .map(ollamaModel -> new Model(ollamaModel.name(), "ollama"))
+                .map(ollamaModel -> new Model(ollamaModel.name(), "Ollama"))
                 .onErrorResume(e -> Flux.empty());
     }
 
@@ -50,7 +52,7 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(OpenAiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.data()))
-                .map(ollamaModel -> new Model(ollamaModel.id(), "openai"))
+                .map(ollamaModel -> new Model(ollamaModel.id(), "Open AI:"))
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
@@ -60,9 +62,13 @@ public class ModelService {
                 .retrieve()
                 .bodyToMono(VertexaiModelResponse.class)
                 .flatMapMany(response -> Flux.fromIterable(response.models()))
-                .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "vertexai"))
+                .map(vertexAiModel -> new Model(vertexAiModel.name().replace("models/", ""), "Vertex AI"))
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
 
+    }
+    private Publisher<Model> fetchAnthropicModels(){
+        Model sonnet = new Model("claude-3-5-sonnet-latest", "Anthropic:");
+        return Flux.fromIterable(List.of(sonnet));
     }
 }

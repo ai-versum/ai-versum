@@ -12,6 +12,9 @@ public record UserConfigDto(
         String vertexaiProjectName,
         String vertexaiLocation,
 
+        String anthropicApiKey,
+        boolean anthropicEnabled,
+
         String imageSize,
         String imageStyle
         ) {
