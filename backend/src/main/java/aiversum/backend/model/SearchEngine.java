@@ -1,2 +1,5 @@
-package aiversum.backend.model;public enum SearchEngine {
+package aiversum.backend.model;
+
+public enum SearchEngine {
+    TAVILY
 }

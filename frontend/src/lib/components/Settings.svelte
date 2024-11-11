@@ -178,7 +178,37 @@
 					<option value="natural">Natural</option>
 				</select>
 			</label>
+			<div class="divider"></div>
 		</div>
+
+		<!-- Web search -->
+		<div class="form-control gap-4">
+			<h3 class="text-lg font-medium">Web Search Engine Settings</h3>
+
+			<label class="form-control">
+				<span class="label-text">Search engine provider</span>
+				<select
+					class="select select-bordered w-full"
+					bind:value={config.searchEngine}
+					name="searchEngine"
+				>
+					<option value="TAVILY">TAVILY</option>
+				</select>
+			</label>
+
+			<label class="form-control">
+				<span class="label-text">API Key</span>
+				<input
+					type="password"
+					class="input input-bordered w-full"
+					placeholder="Enter your provider API key"
+					bind:value={config.searchEngineApiKey}
+					name="searchEngineApiKey"
+				/>
+			</label>
+			<div class="divider"></div>
+		</div>
+
 		<div class="modal-action">
 			<div class="tooltip" data-tip="Close dialog (Esc)">
 				<button class="btn" on:click|preventDefault="{() => onclose()}">Close</button>
