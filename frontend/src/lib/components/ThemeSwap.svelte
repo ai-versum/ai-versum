@@ -1,7 +1,20 @@
 <script>
 	import { Icon } from '@smui/common';
 
-	let lightTheme = localStorage.getItem('theme') !== 'dark';
+	// let lightTheme = localStorage.getItem('theme') !== 'dark';
+	let lightTheme;
+	let storedTheme = localStorage.getItem('theme');
+	if (storedTheme === null) {
+		// First visit: Use system preference
+		lightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+		storedTheme = lightTheme ? 'light' : 'dark';
+		localStorage.setItem('theme', storedTheme);
+	} else {
+		// Subsequent visits: Use stored preference, fallback to light
+		lightTheme = storedTheme !== 'dark';
+	}
+	document.documentElement.setAttribute('data-theme', storedTheme);
+
 
 	function handleThemeChange() {
 		let themeToSet = lightTheme ? 'light' : 'dark';
