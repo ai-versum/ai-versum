@@ -1,6 +1,9 @@
 package aiversum.backend.service;
 
-import aiversum.backend.rest.dto.*;
+import aiversum.backend.rest.dto.Model;
+import aiversum.backend.rest.dto.OllamaModelResponse;
+import aiversum.backend.rest.dto.OpenAiModelResponse;
+import aiversum.backend.rest.dto.VertexaiModelResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -67,6 +70,7 @@ public class ModelService {
                 .onErrorResume(e -> Flux.empty());
 
     }
+
     private Publisher<Model> fetchAnthropicModels(){
         Model sonnet = new Model("claude-3-5-sonnet-20241022", "anthropic");
         return Flux.fromIterable(List.of(sonnet));

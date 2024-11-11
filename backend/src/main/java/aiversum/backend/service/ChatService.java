@@ -84,7 +84,6 @@ public class ChatService {
                 .modelName(model)
                 .build();
 
-
         return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
