@@ -34,7 +34,6 @@
 			return;
 		}
 		if (!question) {
-			addNewModelMessage('Please enter a question.');
 			return;
 		}
 
@@ -64,8 +63,8 @@
 		<Icon class="material-icons">search</Icon>
 		<input type="text" class="grow" placeholder="Search" bind:value={question} on:keydown={handleKeyPress} />
 		{#if isLoading}
-			<Icon class="material-icons">
-				stop
+			<Icon class="material-icons animate-spin">
+				load
 			</Icon>
 		{:else}
 			<Icon
