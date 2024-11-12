@@ -34,7 +34,6 @@
 			return;
 		}
 		if (!question) {
-			addNewModelMessage('Please enter a question.');
 			return;
 		}
 
@@ -43,6 +42,7 @@
 
 		try {
 			let messageContent = '';
+			question = ''; // Clear the input after sending
 
 			const updateMessage = (chunk) => {
 				messageContent += chunk;
@@ -53,7 +53,6 @@
 		} catch (error) {
 			addNewModelMessage(error);
 		} finally {
-			question = ''; // Clear the input after sending
 			isLoading = false;
 		}
 	}
@@ -63,10 +62,16 @@
 	<label class="input input-bordered flex items-center gap-2 w-full">
 		<Icon class="material-icons">search</Icon>
 		<input type="text" class="grow" placeholder="Search" bind:value={question} on:keydown={handleKeyPress} />
-		<Icon
-			class="material-icons {question.trim() ==='' ? 'disabled' : 'cursor-pointer rounded-xl hover:text-secondary transition duration-150 ease-in-out'}"
-			on:click={sendQuestion}>
-			arrow_forward
-		</Icon>
+		{#if isLoading}
+			<Icon class="material-icons animate-spin">
+				load
+			</Icon>
+		{:else}
+			<Icon
+				class="material-icons {question.trim() ==='' ? 'disabled' : 'cursor-pointer rounded-xl hover:text-secondary transition duration-150 ease-in-out'}"
+				on:click={sendQuestion}>
+				arrow_forward
+			</Icon>
+		{/if}
 	</label>
 </div>
