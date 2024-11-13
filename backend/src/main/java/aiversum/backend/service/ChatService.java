@@ -1,5 +1,6 @@
 package aiversum.backend.service;
 
+import aiversum.backend.model.UserConfig;
 import aiversum.backend.rest.ImageController;
 import aiversum.backend.rest.dto.ChatCommand;
 import aiversum.backend.util.MarkdownUtil;
@@ -11,6 +12,8 @@ import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.vertexai.VertexAiGeminiStreamingChatModel;
+import dev.langchain4j.web.search.WebSearchResults;
+import dev.langchain4j.web.search.tavily.TavilyWebSearchEngine;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -27,6 +30,16 @@ public class ChatService {
     }
 
     public Flux<String> chat(String provider, String model, ChatCommand chatCommand) {
+        UserConfig config = userConfigService.getConfig();
+        String searchWeb1 = chatCommand.options().get("searchWeb");
+        String searchQuery = chatCommand.options().get("searchQuery");
+        if (searchWeb1.equals("true")) {
+            TavilyWebSearchEngine webSearchEngine = TavilyWebSearchEngine.builder()
+                    .includeAnswer(true)
+                    .apiKey(config.getSearchEngineApiKey()).build();
+            WebSearchResults searchWeb = webSearchEngine.search(searchQuery);
+            System.out.println(searchWeb);
+        }
         return switch (provider) {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);

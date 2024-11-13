@@ -1,5 +1,6 @@
 package aiversum.backend.model;
 
+import dev.langchain4j.web.search.WebSearchEngine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class UserConfig {
     private String vertexaiApiKey;
     private String vertexaiProjectName;
     private String vertexaiLocation;
+
+    private SearchEngine searchEngine;
+    private String searchEngineApiKey;
 
     private String imageSize;
     private String imageStyle;

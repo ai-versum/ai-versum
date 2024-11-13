@@ -7,6 +7,10 @@
 
 	let question = '';
 	let isLoading = false;  // New state to track loading status
+	let options = {
+		searchWeb: false,
+		searchQuery: ""
+	}
 
 	const addNewUserMessage = (content) => {
 		$chatStore = [...$chatStore, { type: 'USER', text: content }];
@@ -37,6 +41,10 @@
 			return;
 		}
 
+		if (options.searchWeb) {
+			options.searchQuery = question;
+		}
+
 		addNewUserMessage(question);
 		isLoading = true; // Start loading indicator
 
@@ -49,7 +57,7 @@
 				addNewModelMessage(messageContent);
 			};
 
-			await fetchAiChat($chatStore, selectedModel, updateMessage);
+			await fetchAiChat($chatStore, selectedModel, updateMessage, options);
 		} catch (error) {
 			addNewModelMessage(error);
 		} finally {
@@ -59,6 +67,15 @@
 </script>
 
 <div class="flex justify-center items-center pt-1">
+	<label class="label cursor-pointer">
+		<span class="label-text">Search web</span>
+		<input
+			type="checkbox"
+			class="toggle toggle-primary"
+			bind:checked={options.searchWeb}
+			name="webSearch"
+		/>
+	</label>
 	<label class="input input-bordered flex items-center gap-2 w-full">
 		<Icon class="material-icons">search</Icon>
 		<input type="text" class="grow" placeholder="Search" bind:value={question} on:keydown={handleKeyPress} />
