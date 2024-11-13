@@ -7,6 +7,7 @@ The repository will contain both frontend and backend.
 
 * 🤖 OpenAI support for chat streaming and model listing
 * 🤖 Ollama support for chat streaming and model listing
+* 🤖 Anthropic support for chat streaming and model listing
 * 🤖 Vertex AI and Gemini support for chat streaming and model listing
 * 🖼️ Image generation through Dall-e
 * 💻 Code Syntax Highlighting: Enjoy enhanced code readability with our syntax highlighting feature.
@@ -18,7 +19,7 @@ API Documentation available after app is up and running: http://localhost:8080/s
 
 ## Local setup
 ### Requirements
-1. You need either Ollama, OpenAI API or Gemini API setup to play with the application. See more in [docs](https://ai-versum.github.io/ai-versum/#configuration).
+1. You need either Ollama, OpenAI API, Gemini API or Claude API setup to play with the application. See more in [docs](https://ai-versum.github.io/ai-versum/#configuration).
 2. Java 21
 3. Node 20
 
