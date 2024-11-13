@@ -82,6 +82,7 @@ public class ChatService {
         StreamingChatLanguageModel streamingChatLanguageModel = AnthropicStreamingChatModel.builder()
                 .apiKey(apiKey)
                 .modelName(model)
+                .temperature(0.0)
                 .build();
 
 

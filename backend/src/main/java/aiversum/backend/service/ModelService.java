@@ -73,13 +73,10 @@ public class ModelService {
     }
 
     private Publisher<Model> fetchAnthropicModels() {
-
-        Model sonnet_3_5 = new Model("claude-3-5-sonnet-latest", ANTHROPIC);
-        Model sonnet3 = new Model("claude-3-sonnet-20240229", ANTHROPIC);
-        Model haiku_3_5 = new Model("claude-3-5-haiku-latest", ANTHROPIC);
-        Model haiku3 = new Model("claude-3-haiku-20240307", ANTHROPIC);
+        Model sonnetLatest = new Model("claude-3-5-sonnet-latest", ANTHROPIC);
+        Model haikuLatest = new Model("claude-3-5-haiku-latest", ANTHROPIC);
         Model opus = new Model("claude-3-opus-latest", ANTHROPIC);
 
-        return Flux.fromIterable(List.of(sonnet_3_5, sonnet3, haiku_3_5, haiku3, opus));
+        return Flux.fromIterable(List.of(sonnetLatest, haikuLatest, opus));
     }
 }
