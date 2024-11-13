@@ -41,6 +41,18 @@ ai.versum:
     # Setting proper location for Gemini models. Gemini is served from different regions
     location: your-location
 ```
+### Anthropic
+To be able to interact with Anthropic models, such as Claude it's required to setup Project API Key on [https://console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys). The API key will be used to interact with Claude API.
+
+There are available two configuration variables with default values as follow:
+```yml
+ai.versum:
+  anthropic:
+    # Enables Anthropic models such as Claude
+    enabled: true
+    # Secret key used to interact with Anthropic models
+    apiKey: sk_test_1234
+```
 ### Default Options
 Options can be overriden on request. The default used by the application:
 ```yml
