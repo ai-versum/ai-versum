@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User authorization
 - Change theme
 - Save default model
+- Anthropic models list
+- Anthropic chat
 ### Changed
 - Updated frontend dependencies
 - UI layout
