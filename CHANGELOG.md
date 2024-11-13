@@ -11,13 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Grouping models by provider
 - H2 Database
 - User authorization
-- Anthropic models list
-- Anthropic chat
+- Change theme
+- Save default model
 ### Changed
+- Updated frontend dependencies
+- UI layout
 ### Removed
 ### Fixed
 ### Deprecated
-### Security 
+### Security
 
 ## [0.0.2] - 2024-09-17
 

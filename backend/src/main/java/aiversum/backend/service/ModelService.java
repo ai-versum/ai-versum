@@ -1,6 +1,9 @@
 package aiversum.backend.service;
 
-import aiversum.backend.rest.dto.*;
+import aiversum.backend.rest.dto.Model;
+import aiversum.backend.rest.dto.OllamaModelResponse;
+import aiversum.backend.rest.dto.OpenAiModelResponse;
+import aiversum.backend.rest.dto.VertexaiModelResponse;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;

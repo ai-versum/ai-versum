@@ -85,7 +85,6 @@ public class ChatService {
                 .temperature(0.0)
                 .build();
 
-
         return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
