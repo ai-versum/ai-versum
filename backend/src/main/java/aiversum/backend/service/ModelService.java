@@ -10,8 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @Service
 public class ModelService {
+
+    private static final String ANTHROPIC = "anthropic";
+
     private final WebClient webClient;
     private final UserConfigService userConfigService;
 
@@ -29,8 +34,11 @@ public class ModelService {
         if (userConfig.isOpenaiEnabled()) {
             models = models.mergeWith(fetchOpenAIModels(userConfig.getOpenaiApiKey()));
         }
-        if (userConfig.isVertexaiEnabled()){
+        if (userConfig.isVertexaiEnabled()) {
             models = models.mergeWith(fetchVertexaiModels(userConfig.getVertexaiApiKey()));
+        }
+        if (userConfig.isAnthropicEnabled()) {
+            models = models.mergeWith(fetchAnthropicModels());
         }
         return models;
     }
@@ -54,7 +62,8 @@ public class ModelService {
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
-    private Publisher<Model> fetchVertexaiModels(String apiKey){
+
+    private Publisher<Model> fetchVertexaiModels(String apiKey) {
         return webClient
                 .get().uri("https://generativelanguage.googleapis.com/v1/models?key=" + apiKey)
                 .retrieve()
@@ -64,5 +73,13 @@ public class ModelService {
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
 
+    }
+
+    private Publisher<Model> fetchAnthropicModels() {
+        Model sonnetLatest = new Model("claude-3-5-sonnet-latest", ANTHROPIC);
+        Model haikuLatest = new Model("claude-3-5-haiku-latest", ANTHROPIC);
+        Model opus = new Model("claude-3-opus-latest", ANTHROPIC);
+
+        return Flux.fromIterable(List.of(sonnetLatest, haikuLatest, opus));
     }
 }

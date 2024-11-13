@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] 
 
 ### Added
-- Groping models by provider
+- Grouping models by provider
 - H2 Database
 - User authorization
 - Change theme
 - Save default model
+- Anthropic models list
+- Anthropic chat
 ### Changed
 - Updated frontend dependencies
 - UI layout

@@ -6,6 +6,7 @@ import aiversum.backend.util.MarkdownUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.model.StreamingResponseHandler;
+import dev.langchain4j.model.anthropic.AnthropicStreamingChatModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
@@ -31,11 +32,12 @@ public class ChatService {
             case "ollama" -> generateOllama(model, chatCommand);
             case "openai" -> generateOpenai(model, chatCommand);
             case "vertexai" -> generateVertexai(model, chatCommand);
+            case "anthropic" -> generateAnthropic(model, chatCommand);
             case null, default -> throw new IllegalArgumentException("Unknown provider: " + provider);
         };
     }
 
-    public Flux<String> generateOpenai(String model, ChatCommand chatCommand)  {
+    public Flux<String> generateOpenai(String model, ChatCommand chatCommand) {
         var apiKey = userConfigService.getConfig().getOpenaiApiKey();
         if (model.contains("dall")) {
             String imageUrl = imageController.generateOpenaiImage(model, chatCommand);
@@ -69,6 +71,18 @@ public class ChatService {
                 .project(userConfig.getVertexaiProjectName())
                 .location(userConfig.getVertexaiLocation())
                 .modelName(model)
+                .build();
+
+        return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
+    }
+
+    public Flux<String> generateAnthropic(String model, ChatCommand chatCommand) {
+        var apiKey = userConfigService.getConfig().getAnthropicApiKey();
+
+        StreamingChatLanguageModel streamingChatLanguageModel = AnthropicStreamingChatModel.builder()
+                .apiKey(apiKey)
+                .modelName(model)
+                .temperature(0.0)
                 .build();
 
         return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
