@@ -11,6 +11,9 @@ import java.util.List;
 
 @Service
 public class ModelService {
+
+    private static final String ANTHROPIC = "anthropic";
+
     private final WebClient webClient;
     private final UserConfigService userConfigService;
 
@@ -28,10 +31,10 @@ public class ModelService {
         if (userConfig.isOpenaiEnabled()) {
             models = models.mergeWith(fetchOpenAIModels(userConfig.getOpenaiApiKey()));
         }
-        if (userConfig.isVertexaiEnabled()){
+        if (userConfig.isVertexaiEnabled()) {
             models = models.mergeWith(fetchVertexaiModels(userConfig.getVertexaiApiKey()));
         }
-        if(userConfig.isAnthropicEnabled()){
+        if (userConfig.isAnthropicEnabled()) {
             models = models.mergeWith(fetchAnthropicModels());
         }
         return models;
@@ -56,7 +59,8 @@ public class ModelService {
                 .doOnError(Throwable::printStackTrace)
                 .onErrorResume(e -> Flux.empty());
     }
-    private Publisher<Model> fetchVertexaiModels(String apiKey){
+
+    private Publisher<Model> fetchVertexaiModels(String apiKey) {
         return webClient
                 .get().uri("https://generativelanguage.googleapis.com/v1/models?key=" + apiKey)
                 .retrieve()
@@ -67,8 +71,15 @@ public class ModelService {
                 .onErrorResume(e -> Flux.empty());
 
     }
-    private Publisher<Model> fetchAnthropicModels(){
-        Model sonnet = new Model("claude-3-5-sonnet-20241022", "anthropic");
-        return Flux.fromIterable(List.of(sonnet));
+
+    private Publisher<Model> fetchAnthropicModels() {
+
+        Model sonnet_3_5 = new Model("claude-3-5-sonnet-latest", ANTHROPIC);
+        Model sonnet3 = new Model("claude-3-sonnet-20240229", ANTHROPIC);
+        Model haiku_3_5 = new Model("claude-3-5-haiku-latest", ANTHROPIC);
+        Model haiku3 = new Model("claude-3-haiku-20240307", ANTHROPIC);
+        Model opus = new Model("claude-3-opus-latest", ANTHROPIC);
+
+        return Flux.fromIterable(List.of(sonnet_3_5, sonnet3, haiku_3_5, haiku3, opus));
     }
 }

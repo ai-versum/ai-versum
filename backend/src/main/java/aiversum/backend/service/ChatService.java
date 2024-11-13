@@ -37,7 +37,7 @@ public class ChatService {
         };
     }
 
-    public Flux<String> generateOpenai(String model, ChatCommand chatCommand)  {
+    public Flux<String> generateOpenai(String model, ChatCommand chatCommand) {
         var apiKey = userConfigService.getConfig().getOpenaiApiKey();
         if (model.contains("dall")) {
             String imageUrl = imageController.generateOpenaiImage(model, chatCommand);
@@ -76,7 +76,7 @@ public class ChatService {
         return generateResponse(chatCommand.messages(), streamingChatLanguageModel);
     }
 
-    public Flux<String> generateAnthropic(String model, ChatCommand chatCommand){
+    public Flux<String> generateAnthropic(String model, ChatCommand chatCommand) {
         var apiKey = userConfigService.getConfig().getAnthropicApiKey();
 
         StreamingChatLanguageModel streamingChatLanguageModel = AnthropicStreamingChatModel.builder()
